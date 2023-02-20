@@ -41,7 +41,13 @@ L-moments to estimate from the dataset.
 
     data = [2.0, 3.0, 4.0, 2.4, 5.5, 1.2, 5.4, 2.2, 7.1, 1.3, 1.5]
     lm.lmom_ratios(data, nmom=5)
-    [Out]: [3.2363636363636363, 1.1418181818181818, 0.27388535031847133, 0.023354564755838598, -0.042462845010615709]
+    [Out]: [
+        3.2363636363636363,
+        1.1418181818181818,
+        0.27388535031847133,
+        0.023354564755838598,
+        -0.042462845010615709,
+    ]
 
 This returns the first five sample L-moments, in the structured as l1, l2, t3, t4, t5. Where t3..5 = l3..5 / l2.
 
@@ -56,10 +62,13 @@ For example, using the gamma distribution:
 
     import lmoments3 as lm
     from lmoments3 import distr
+
     data = [2.0, 3.0, 4.0, 2.4, 5.5, 1.2, 5.4, 2.2, 7.1, 1.3, 1.5]
     paras = distr.gam.lmom_fit(data)
     paras
-    [Out]: OrderedDict([('a', 2.295206110128833), ('loc', 0), ('scale', 1.4100535991436407)])
+    [Out]: OrderedDict(
+        [("a", 2.295206110128833), ("loc", 0), ("scale", 1.4100535991436407)]
+    )
 
 This returns the distribution's parameters as an :class:`OrderedDict` in the same order as a standard `scipy` list of
 distribution function parameters. The distribution parameters can be used, for example, like this:
@@ -93,7 +102,12 @@ Example:
     [Out]: [3.2363636363636363, 1.1418181181569327, 0.24963415541016151]
 
     distr.gam.lmom_ratios(nmom=4, **paras)
-    [Out]: [3.2363636363636363, 1.1418181181569327, 0.21862865148182167, 0.13877337951549581]
+    [Out]: [
+        3.2363636363636363,
+        1.1418181181569327,
+        0.21862865148182167,
+        0.13877337951549581,
+    ]
 
 Or using the frozen distribution:
 
@@ -113,7 +127,6 @@ parameters are provided, the `scipy` defaults of `loc=0` and `scale=1` are used.
 Example: Calculate the Negative Log Likelihood of a Gamma distribution fitted to `data`:
 
 .. code-block:: python
-
 
     from lmoments3 import distr
 
@@ -147,8 +160,9 @@ Example: Calculate the Akaike Information Criterion for the weibull distribution
 .. code-block:: python
 
     from lmoments3 import stats, distr
-    paras = {'loc': 0.67, 'scale': 2.71, 'c': 1.18}
-    stats.AIC(data, 'wei', paras)
+
+    paras = {"loc": 0.67, "scale": 2.71, "c": 1.18}
+    stats.AIC(data, "wei", paras)
     [Out]: 47.500528639652515
 
 Functions :func:`AICc` and :func:`BIC` have a similar structure and calculate the corrected Akaike Information Criterion

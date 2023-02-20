@@ -1,8 +1,10 @@
 import unittest
 from datetime import datetime
+
+import numpy as np
+
 import lmoments3 as lm
 from lmoments3 import distr
-import numpy as np
 
 
 class TestSamlmuSpeed(unittest.TestCase):
@@ -17,19 +19,21 @@ class TestSamlmuSpeed(unittest.TestCase):
 
     def tearDown(self):
         duration = datetime.now() - self.start_time
-        print("Test {} ran for {} s.".format(self.id(), duration.total_seconds()))
+        print(f"Test {self.id()} ran for {duration.total_seconds()} s.")
 
     def test_n50_nmom3(self):
         start_i = 0
         for i in range(10000):
-            l1, l2, t3 = lm.lmom_ratios(self.record[start_i:start_i + self.n], nmom=3)
+            l1, l2, t3 = lm.lmom_ratios(self.record[start_i : start_i + self.n], nmom=3)
             t2 = l2 / l1
             start_i += self.n
 
     def test_n50_nmom4(self):
         start_i = 0
         for i in range(10000):
-            l1, l2, t3, t4 = lm.lmom_ratios(self.record[start_i:start_i + self.n], nmom=4)
+            l1, l2, t3, t4 = lm.lmom_ratios(
+                self.record[start_i : start_i + self.n], nmom=4
+            )
             t2 = l2 / l1
             start_i += self.n
 
@@ -40,7 +44,7 @@ class TestKappaSpeed(unittest.TestCase):
 
     def tearDown(self):
         duration = datetime.now() - self.start_time
-        print("Test {} ran for {} s.".format(self.id(), duration.total_seconds()))
+        print(f"Test {self.id()} ran for {duration.total_seconds()} s.")
 
     def test_n50(self):
         n = 50
