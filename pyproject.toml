@@ -1,0 +1,16 @@
+[tool]
+
+[tool.black]
+target-version = [
+  "py38", "py39", "py310"
+]
+
+[tool.coverage.run]
+source = "lmoments3"
+relative_files = true
+omit = ["*/tests/*.py", "lmoments3/_version.py"]
+
+[tool.isort]
+profile = "black"
+py_version = 38
+append_only = true

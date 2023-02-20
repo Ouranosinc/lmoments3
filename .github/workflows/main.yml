@@ -1,0 +1,50 @@
+name: "lmoments3 Testing Suite"
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - CHANGELOG.txt
+      - README.rst
+      - setup.cfg
+      - setup.py
+      - lmoments3/__init__.py
+  pull_request:
+
+
+jobs:
+  black:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel previous runs
+        uses: styfle/cancel-workflow-action@0.11.0
+        with:
+          access_token: ${{ github.token }}
+      - uses: actions/checkout@v3
+      - name: Set up Python3.8
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+      - name: Install black
+        run: pip install black
+      - name: Run linting suite
+        run: black --check lmoments3
+
+  test:
+    name: Pip with Python${{ matrix.python-version }}
+    needs: black
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10"]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install lmoments3
+        run: pip install -e .
+      - name: Test
+        run: python -m unittest discover -v
