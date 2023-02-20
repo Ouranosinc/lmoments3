@@ -15,7 +15,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 project = 'lmoments3 Library'
-copyright = '2014‒{}, Florenz A. P. Hollebrandse, Sam Gillespie, William Asquith, J. R. M. Hosking'.format(date.today().year)
+copyright = f'2014‒{date.today().year}, Florenz A. P. Hollebrandse, Sam Gillespie, William Asquith, J. R. M. Hosking'
 release = versioneer.get_version()
 version = '.'.join(release.split('.')[:2])
 

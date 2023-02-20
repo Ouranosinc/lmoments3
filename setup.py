@@ -3,6 +3,7 @@ import versioneer
 
 
 requirements = open("requirements.txt").readlines()
+dev_requirements = open("requirements_dev.txt").readlines()
 readme = open("README.rst").read()
 
 setup(
@@ -31,5 +32,8 @@ setup(
     long_description=readme,
     long_description_content_type="text/x-rst",
     install_requires=requirements,
+    extras_require=dict(
+        dev=dev_requirements,
+    ),
     zip_safe=False,
 )
