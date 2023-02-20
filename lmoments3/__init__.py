@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 """
-This file contains a Python implimentation of the lmoments.f library created by
+This file contains a Python implementation of the lmoments.f library created by
 J. R. M. HOSKING.
 
-The base Fortran code is copyright of the IBM Corperation, and the licensing
+The base Fortran code is copyright of the IBM Corporation, and the licensing
 information is shown below:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -41,6 +41,7 @@ For more information, or to report bugs, contact:
 Licensing for Python Translation:
 ####################################################
     Copyright (C) 2014 Sam Gillespie
+    Copyright (C) 2023 Ouranos Inc., Trevor James Smith, Pascal Bourgault
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -53,7 +54,7 @@ Licensing for Python Translation:
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.Version 0.1.0:
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ####################################################
 
 """
