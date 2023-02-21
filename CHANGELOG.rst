@@ -6,9 +6,9 @@ version 1.0.4 (unreleased)
 --------------------------
 - Rename `frechet_r_gen` to `weibull_min_r`, `frechet_r` being deprecated with SciPy 1.6
 - Migrated organisations from OpenHydrology to Ouranosinc:
-  - Added Continuous Integration checks, pre-commit configurations, package metadata adjustments
-  - Code style now follows Black v2023.1
-  - ReadTheDocs documentation for lmoments3 no longer nested within OpenHydrology
+    * Added Continuous Integration checks, pre-commit configurations, package metadata adjustments
+    * Code style now follows Black v2023.1
+    * ReadTheDocs documentation for lmoments3 no longer nested within OpenHydrology
 
 version 1.0.3 (2015-09-24)
 --------------------------

@@ -1,17 +1,27 @@
 lmoments3
 =========
 
-Python 3.x library to estimate linear moments for statistical distribution functions
+A Python 3.x library to estimate linear moments for statistical distribution functions.
 
 Requires the packages `numpy` and `scipy`.
 
 For the Python 2.x compatible package see `lmoments` on the Python Package Index.
 
+Installation
+------------
+
+lmoments3 can be installed via `pip`
+
+.. code-block:: console
+
+    $ pip install lmoments3
+
 Documentation
 -------------
 
-Documentation is available on `Read the Docs <http://open-hydrology.readthedocs.org/projects/lmoments3/>`_. Souce code
-etc. on `GitHub <https://github.com/OpenHydrology/lmoments3>`_.
+Documentation is available on `Read the Docs <http://lmoments3.readthedocs.io/latest>`_.
+
+Source code can be found at `GitHub <https://github.com/OpenHydrology/lmoments3>`_.
 
 Origin
 ------
@@ -22,7 +32,7 @@ original code <http://lib.stat.cmu.edu/general/lmoments>`_)
 IBM software disclaimer
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-The base Fortran code is copyright of the IBM Corperation, and the licensing information is shown below:
+The base Fortran code is copyright of the IBM Corporation, and the licensing information is shown below:
 
 LMOMENTS: Fortran routines for use with the method of L-moments
 
@@ -66,7 +76,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see
-<http://www.gnu.org/licenses/>.Version 0.1.0:
+<https://www.gnu.org/licenses/>
 
 Python 3 compatibility
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -74,7 +84,9 @@ Python 3 compatibility
 The Python package was further updated to make it compatible with Python 3.x by Florenz A.P. Hollebrandse
 <f.a.p.hollebrandse@protonmail.ch>.
 
-The software remains licenced under the GNU General Public License, see <http://www.gnu.org/licenses/gpl.html>.
+The software remains licenced under the GNU General Public License, see <https://www.gnu.org/licenses/gpl.html>.
 
 The Python 3 port, is based on the original `lmoments package <https://pypi.python.org/pypi/lmoments/0.2.2>`_, version
 0.2.2.
+
+The Ouranosinc package was forked from `OpenHydrology's lmoments3 <https://github.com/OpenHydrology/lmoments3>`_. The primary aims of this fork are to provide maintenance for the existing codebase as well as update the project to benefit from more modern Python coding conventions, maintain compatibility with existing Python dependencies.
