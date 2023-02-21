@@ -4,6 +4,7 @@
 target-version = [
   "py38", "py39", "py310"
 ]
+extend-exclude = 'lmoments3/_version.py'
 
 [tool.coverage.run]
 source = "lmoments3"
