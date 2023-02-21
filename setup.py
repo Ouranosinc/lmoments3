@@ -1,3 +1,4 @@
+# noqa: D100
 from setuptools import setup
 
 import versioneer
@@ -27,8 +28,18 @@ setup(
         "Programming Language :: Python :: 3.10",
         "Topic :: Scientific/Engineering :: Mathematics",
     ],
-    description="A library extend scipy with L-moments to calculate optimal parameters for a number of distributions",
-    keywords=["lmoments3", "statistics"],
+    description="A library extend scipy with L-moments "
+    "to calculate optimal parameters for a number of distributions",
+    keywords=[
+        "distributions",
+        "fitting",
+        "l-moments",
+        "linear-moments",
+        "lmoments",
+        "lmoments3",
+        "scipy",
+        "statistics",
+    ],
     long_description=readme,
     long_description_content_type="text/x-rst",
     install_requires=requirements,
