@@ -4,7 +4,7 @@ from datetime import date
 
 os.chdir("../..")  # Versioneer requires us to work from the root of the project
 sys.path.insert(0, os.getcwd())
-import versioneer
+import versioneer  # noqa: E402
 
 needs_sphinx = "1.3"
 templates_path = ["_templates"]
@@ -12,7 +12,14 @@ source_suffix = ".rst"
 master_doc = "index"
 
 project = "lmoments3 Library"
-copyright = f"2014‒{date.today().year}, Florenz A. P. Hollebrandse, Sam Gillespie, William Asquith, J. R. M. Hosking"
+copyright = (
+    f"2014‒{date.today().year} "
+    "Ouranos Inc., Trevor James Smith, Pascal Bourgault, "
+    "Florenz A. P. Hollebrandse, "
+    "Sam Gillespie, "
+    "William Asquith, "
+    "J. R. M. Hosking"
+)
 release = versioneer.get_version()
 version = ".".join(release.split(".")[:2])
 
@@ -26,7 +33,7 @@ if not on_rtd:  # only import and set the theme if we're building docs locally
     html_theme = "sphinx_rtd_theme"
     html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
-html_static_path = ["_static"]
+html_static_path = []
 html_last_updated_fmt = "%d/%m/%Y"
 html_show_sphinx = False
 htmlhelp_basename = "doc"
