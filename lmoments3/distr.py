@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
-
 # lmoments3 library
-# Copyright (C) 2012, 2014  J. R. M. Hosking, William Asquith,
+# Copyright (C) 2012, 2014 J. R. M. Hosking, William Asquith,
 # Sam Gillespie, Pierre Gérard-Marchant, Florenz A. P. Hollebrandse
+#
+# Copyright (C) 2023 Ouranos Inc., Trevor James Smith, Pascal Bourgault
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,14 +17,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import math
 from collections import OrderedDict
+
 import numpy as np
 import scipy.stats
 import scipy.stats._continuous_distns
 from scipy import special
-import math
-import lmoments3 as lm
 
+import lmoments3 as lm
 
 try:
     # Scipy >= 1.9
@@ -34,7 +35,7 @@ except ImportError:
     from scipy.stats._distn_infrastructure import rv_frozen as rv_continuous_frozen
 
 
-class LmomDistrMixin(object):
+class LmomDistrMixin:
     """
     Mixin class to add L-moment methods to :class:`scipy.stats.rv_continous` distribution functions. Distributions using
     the mixin should override the methods :meth:`._lmom_fit` and :meth:`.lmom_ratios`.
@@ -63,12 +64,12 @@ class LmomDistrMixin(object):
         n_min = self.numargs + 2
         if len(data) > 0:
             if len(data) <= n_min:
-                raise ValueError("At least {} data points must be provided.".format(n_min))
+                raise ValueError(f"At least {n_min} data points must be provided.")
             lmom_ratios = lm.lmom_ratios(data, nmom=n_min)
         elif not lmom_ratios:
             raise Exception("Either `data` or `lmom_ratios` must be provided.")
         elif len(lmom_ratios) < n_min:
-            raise ValueError("At least {} number of L-moments must be provided.".format(n_min))
+            raise ValueError(f"At least {n_min} number of L-moments must be provided.")
 
         return self._lmom_fit(lmom_ratios)
 
@@ -157,22 +158,22 @@ class GenlogisticGen(LmomDistrMixin, scipy.stats.rv_continuous):
     The CDF is given by
 
     .. math::
-       F(x;k) = \\frac{1}{1 + \left[1 - kx\\right]^{1/k}}
+       F(x;k) = \\frac{1}{1 + \\left[1 - kx\\right]^{1/k}}
     """
 
     def _argcheck(self, k):
-        return (k == k)
+        return k == k
 
     def _cdf(self, x, k):
-        u = np.where(k == 0, np.exp(-x), (1. - k * x) ** (1. / k))
-        return 1. / (1. + u)
+        u = np.where(k == 0, np.exp(-x), (1.0 - k * x) ** (1.0 / k))
+        return 1.0 / (1.0 + u)
 
     def _pdf(self, x, k):
-        u = np.where(k == 0, np.exp(-x), (1. - k * x) ** (1. / k))
-        return u ** (1. - k) / (1. + u) ** 2
+        u = np.where(k == 0, np.exp(-x), (1.0 - k * x) ** (1.0 / k))
+        return u ** (1.0 - k) / (1.0 + u) ** 2
 
     def _ppf(self, q, k):
-        F = q / (1. - q)
+        F = q / (1.0 - q)
         return np.where(k == 0, np.log(F), (1 - F ** (-k)) / k)
 
     def _lmom_fit(self, lmom_ratios):
@@ -190,9 +191,7 @@ class GenlogisticGen(LmomDistrMixin, scipy.stats.rv_continuous):
             A = lmom_ratios[1] / GG
             para1 = lmom_ratios[0] - A * (1 - GG) / G
 
-        para = OrderedDict([('k', G),
-                            ('loc', para1),
-                            ('scale', A)])
+        para = OrderedDict([("k", G), ("loc", para1), ("scale", A)])
         return para
 
     def _lmom_ratios(self, k, loc, scale, nmom):
@@ -200,41 +199,154 @@ class GenlogisticGen(LmomDistrMixin, scipy.stats.rv_continuous):
             return ValueError("Invalid parameters")
 
         SMALL = 1e-4
-        C1 = math.pi ** 2 / 6
-        C2 = 7 * math.pi ** 4 / 360
+        C1 = math.pi**2 / 6
+        C2 = 7 * math.pi**4 / 360
 
         Z = [[0], [0], [1]]
         Z.append([0.166666666666666667, 0.833333333333333333])
         Z.append([0.416666666666666667, 0.583333333333333333])
         Z.append([0.666666666666666667e-1, 0.583333333333333333, 0.350000000000000000])
         Z.append([0.233333333333333333, 0.583333333333333333, 0.183333333333333333])
-        Z.append([0.357142857142857143e-1, 0.420833333333333333, 0.458333333333333333, 0.851190476190476190e-1])
-        Z.append([0.150992063492063492, 0.515625000000000000, 0.297916666666666667, 0.354662698412698413e-1])
-        Z.append([0.222222222222222222e-1, 0.318893298059964727, 0.479976851851851852, 0.165509259259259259,
-                  0.133983686067019400e-1])
-        Z.append([0.106507936507936508, 0.447663139329805996, 0.360810185185185185, 0.803902116402116402e-1,
-                  0.462852733686067019e-2])
-        Z.append([0.151515151515151515e-1, 0.251316137566137566, 0.469695216049382716, 0.227650462962962963,
-                  0.347139550264550265e-1, 0.147271324354657688e-2])
-        Z.append([0.795695045695045695e-1, 0.389765946502057613, 0.392917309670781893, 0.123813106261022928,
-                  0.134998713991769547e-1, 0.434261597456041900e-3])
-        Z.append([0.109890109890109890e-1, 0.204132996632996633, 0.447736625514403292, 0.273053442827748383,
-                  0.591917438271604938e-1, 0.477687757201646091e-2, 0.119302636663747775e-3])
-        Z.append([0.619345205059490774e-1, 0.342031759392870504, 0.407013705173427396, 0.162189192806752331,
-                  0.252492100235155791e-1, 0.155093427662872107e-2, 0.306778208563922850e-4])
-        Z.append([0.833333333333333333e-2, 0.169768364902293474, 0.422191282868366202, 0.305427172894620811,
-                  0.840827939972285210e-1, 0.972435791446208113e-2, 0.465280282988616322e-3, 0.741380670696146887e-5])
-        Z.append([0.497166028416028416e-1, 0.302765838589871328, 0.410473300089185506, 0.194839026503251764,
-                  0.386598063704648526e-1, 0.341399407642897226e-2, 0.129741617371825705e-3, 0.168991182291033482e-5])
-        Z.append([0.653594771241830065e-2, 0.143874847595085690, 0.396432853710259464, 0.328084180720899471,
-                  0.107971393165194318, 0.159653369932077769e-1, 0.110127737569143819e-2, 0.337982364582066963e-4,
-                  0.364490785333601627e-6])
-        Z.append([0.408784570549276431e-1, 0.270244290725441519, 0.407599524514551521, 0.222111426489320008,
-                  0.528463884629533398e-1, 0.598298239272872761e-2, 0.328593965565898436e-3, 0.826179113422830354e-5,
-                  0.746033771150646605e-7])
-        Z.append([0.526315789473684211e-2, 0.123817655753054913, 0.371859291444794917, 0.343568747670189607,
-                  0.130198662812524058, 0.231474364899477023e-1, 0.205192519479869981e-2, 0.912058258107571930e-4,
-                  0.190238611643414884e-5, 0.145280260697757497e-7])
+        Z.append(
+            [
+                0.357142857142857143e-1,
+                0.420833333333333333,
+                0.458333333333333333,
+                0.851190476190476190e-1,
+            ]
+        )
+        Z.append(
+            [
+                0.150992063492063492,
+                0.515625000000000000,
+                0.297916666666666667,
+                0.354662698412698413e-1,
+            ]
+        )
+        Z.append(
+            [
+                0.222222222222222222e-1,
+                0.318893298059964727,
+                0.479976851851851852,
+                0.165509259259259259,
+                0.133983686067019400e-1,
+            ]
+        )
+        Z.append(
+            [
+                0.106507936507936508,
+                0.447663139329805996,
+                0.360810185185185185,
+                0.803902116402116402e-1,
+                0.462852733686067019e-2,
+            ]
+        )
+        Z.append(
+            [
+                0.151515151515151515e-1,
+                0.251316137566137566,
+                0.469695216049382716,
+                0.227650462962962963,
+                0.347139550264550265e-1,
+                0.147271324354657688e-2,
+            ]
+        )
+        Z.append(
+            [
+                0.795695045695045695e-1,
+                0.389765946502057613,
+                0.392917309670781893,
+                0.123813106261022928,
+                0.134998713991769547e-1,
+                0.434261597456041900e-3,
+            ]
+        )
+        Z.append(
+            [
+                0.109890109890109890e-1,
+                0.204132996632996633,
+                0.447736625514403292,
+                0.273053442827748383,
+                0.591917438271604938e-1,
+                0.477687757201646091e-2,
+                0.119302636663747775e-3,
+            ]
+        )
+        Z.append(
+            [
+                0.619345205059490774e-1,
+                0.342031759392870504,
+                0.407013705173427396,
+                0.162189192806752331,
+                0.252492100235155791e-1,
+                0.155093427662872107e-2,
+                0.306778208563922850e-4,
+            ]
+        )
+        Z.append(
+            [
+                0.833333333333333333e-2,
+                0.169768364902293474,
+                0.422191282868366202,
+                0.305427172894620811,
+                0.840827939972285210e-1,
+                0.972435791446208113e-2,
+                0.465280282988616322e-3,
+                0.741380670696146887e-5,
+            ]
+        )
+        Z.append(
+            [
+                0.497166028416028416e-1,
+                0.302765838589871328,
+                0.410473300089185506,
+                0.194839026503251764,
+                0.386598063704648526e-1,
+                0.341399407642897226e-2,
+                0.129741617371825705e-3,
+                0.168991182291033482e-5,
+            ]
+        )
+        Z.append(
+            [
+                0.653594771241830065e-2,
+                0.143874847595085690,
+                0.396432853710259464,
+                0.328084180720899471,
+                0.107971393165194318,
+                0.159653369932077769e-1,
+                0.110127737569143819e-2,
+                0.337982364582066963e-4,
+                0.364490785333601627e-6,
+            ]
+        )
+        Z.append(
+            [
+                0.408784570549276431e-1,
+                0.270244290725441519,
+                0.407599524514551521,
+                0.222111426489320008,
+                0.528463884629533398e-1,
+                0.598298239272872761e-2,
+                0.328593965565898436e-3,
+                0.826179113422830354e-5,
+                0.746033771150646605e-7,
+            ]
+        )
+        Z.append(
+            [
+                0.526315789473684211e-2,
+                0.123817655753054913,
+                0.371859291444794917,
+                0.343568747670189607,
+                0.130198662812524058,
+                0.231474364899477023e-1,
+                0.205192519479869981e-2,
+                0.912058258107571930e-4,
+                0.190238611643414884e-5,
+                0.145280260697757497e-7,
+            ]
+        )
 
         GG = k * k
         if abs(k) > SMALL:
@@ -264,7 +376,7 @@ class GenlogisticGen(LmomDistrMixin, scipy.stats.rv_continuous):
         return xmom
 
 
-glo = GenlogisticGen(name='glogistic', shapes='k')
+glo = GenlogisticGen(name="glogistic", shapes="k")
 
 
 class GennormGen(LmomDistrMixin, scipy.stats.rv_continuous):
@@ -272,33 +384,33 @@ class GennormGen(LmomDistrMixin, scipy.stats.rv_continuous):
     The CDF is given by
 
     .. math::
-       F(x) = \Phi{\left[ -k^{-1} \log\{1 - kx\} \\right]}
+       F(x) = \\Phi{\\left[ -k^{-1} \\log\\{1 - kx\\} \\right]}
     """
 
     def _argcheck(self, k):
-        return (k == k)
+        return k == k
 
     def _cdf(self, x, k):
-        y = np.where(k == 0, x, -np.log(1. - k * x) / k)
+        y = np.where(k == 0, x, -np.log(1.0 - k * x) / k)
         return 0.5 * (1 + special.erf(y * np.sqrt(0.5)))
 
     def _pdf(self, x, k):
-        u = np.where(k == 0, x, -np.log(1. - k * x) / k)
-        return np.exp(k * u - u * u / 2.) / np.sqrt(2 * np.pi)
+        u = np.where(k == 0, x, -np.log(1.0 - k * x) / k)
+        return np.exp(k * u - u * u / 2.0) / np.sqrt(2 * np.pi)
 
     def _ppf(self, q, k):
         u = special.ndtri(q)  # Normal distribution's ppf
-        return np.where(k == 0, u, (1. - np.exp(-k * u)) / k)
+        return np.where(k == 0, u, (1.0 - np.exp(-k * u)) / k)
 
     def _lmom_fit(self, lmom_ratios):
         SMALL = 1e-8
-        A0 = 0.20466534e+01
-        A1 = -0.36544371e+01
-        A2 = 0.18396733e+01
-        A3 = -0.20360244e+00
-        B1 = -0.20182173e+01
-        B2 = 0.12420401e+01
-        B3 = -0.21741801e+00
+        A0 = 0.20466534e01
+        A1 = -0.36544371e01
+        A2 = 0.18396733e01
+        A3 = -0.20360244e00
+        B1 = -0.20182173e01
+        B2 = 0.12420401e01
+        B3 = -0.21741801e00
 
         T3 = lmom_ratios[2]
         if lmom_ratios[1] <= 0 or abs(T3) >= 1:
@@ -309,24 +421,41 @@ class GennormGen(LmomDistrMixin, scipy.stats.rv_continuous):
         elif abs(T3) <= SMALL:
             U, A, G = lmom_ratios[0], lmom_ratios[1] * math.sqrt(math.pi), 0
         else:
-            TT = T3 ** 2
-            G = -T3 \
-                * (A0 + TT * (A1 + TT * (A2 + TT * A3))) \
+            TT = T3**2
+            G = (
+                -T3
+                * (A0 + TT * (A1 + TT * (A2 + TT * A3)))
                 / (1 + TT * (B1 + TT * (B2 + TT * B3)))
-            E = math.exp(0.5 * G ** 2)
+            )
+            E = math.exp(0.5 * G**2)
             A = lmom_ratios[1] * G / (E * special.erf(0.5 * G))
             U = lmom_ratios[0] + A * (E - 1) / G
-        para = OrderedDict([('k', G),
-                            ('loc', U),
-                            ('scale', A)])
+        para = OrderedDict([("k", G), ("loc", U), ("scale", A)])
         return para
 
     def _lmom_ratios(self, k, loc, scale, nmom):
-        ZMOM = [0, 0.564189583547756287, 0, 0.122601719540890947,
-                0, 0.436611538950024944e-1, 0, 0.218431360332508776e-1,
-                0, 0.129635015801507746e-1, 0, 0.852962124191705402e-2,
-                0, 0.601389015179323333e-2, 0, 0.445558258647650150e-2,
-                0, 0.342643243578076985e-2, 0, 0.271267963048139365e-2]
+        ZMOM = [
+            0,
+            0.564189583547756287,
+            0,
+            0.122601719540890947,
+            0,
+            0.436611538950024944e-1,
+            0,
+            0.218431360332508776e-1,
+            0,
+            0.129635015801507746e-1,
+            0,
+            0.852962124191705402e-2,
+            0,
+            0.601389015179323333e-2,
+            0,
+            0.445558258647650150e-2,
+            0,
+            0.342643243578076985e-2,
+            0,
+            0.271267963048139365e-2,
+        ]
 
         RRT2 = 1 / math.sqrt(2)
         RRTPI = 1 / math.sqrt(math.pi)
@@ -347,7 +476,7 @@ class GennormGen(LmomDistrMixin, scipy.stats.rv_continuous):
                 xmom.append(ZMOM[i - 1])
             return xmom
         else:
-            EGG = math.exp(0.5 * k ** 2)
+            EGG = math.exp(0.5 * k**2)
             ALAM1 = (1 - EGG) / k
             xmom = [loc + scale * ALAM1]
             if nmom == 1:
@@ -411,7 +540,7 @@ class GennormGen(LmomDistrMixin, scipy.stats.rv_continuous):
                         NOTCGD = m
 
                 if NOTCGD == 0:
-                    CONST = -math.exp(CC ** 2) * RRTPI / (ALAM2 * k)
+                    CONST = -math.exp(CC**2) * RRTPI / (ALAM2 * k)
 
                     for m in range(3, nmom + 1):
                         xmom.append(CONST * EST[m - 1])
@@ -420,7 +549,7 @@ class GennormGen(LmomDistrMixin, scipy.stats.rv_continuous):
                     raise Exception("L-moment ratios computation did not converge.")
 
 
-gno = GennormGen(name='gennorm', shapes='k')
+gno = GennormGen(name="gennorm", shapes="k")
 
 
 class KappaGen(LmomDistrMixin, scipy.stats.rv_continuous):
@@ -428,32 +557,34 @@ class KappaGen(LmomDistrMixin, scipy.stats.rv_continuous):
     The CDF is given by
 
     .. math::
-       F(x; a, b) = \left[1-h\{1-kx\}^{1/k}\\right]^{1/h}
+       F(x; a, b) = \\left[1-h\\{1-kx\\}^{1/k}\\right]^{1/h}
     """
 
     def _argcheck(self, k, h):
         k = np.asarray(k)
         h = np.asarray(h)
         # Upper bound
-        self.b = np.where(k <= 0, np.inf, 1. / k)
+        self.b = np.where(k <= 0, np.inf, 1.0 / k)
         # Lower bound
-        self.a = np.where(h > 0,
-                          np.where(k == 0, 0., (1 - h ** (-k)) / k),
-                          np.where(k < 0, 1. / k, -np.inf))
+        self.a = np.where(
+            h > 0,
+            np.where(k == 0, 0.0, (1 - h ** (-k)) / k),
+            np.where(k < 0, 1.0 / k, -np.inf),
+        )
         return (k == k) | (h == h)
 
     def _cdf(self, x, k, h):
-        y = np.where(k == 0, np.exp(-x), (1 - k * x) ** (1. / k))
-        return np.where(h == 0, np.exp(-y), (1. - h * y) ** (1. / h))
+        y = np.where(k == 0, np.exp(-x), (1 - k * x) ** (1.0 / k))
+        return np.where(h == 0, np.exp(-y), (1.0 - h * y) ** (1.0 / h))
 
     def _pdf(self, x, k, h):
-        y = (1 - k * x) ** (1. / k - 1.)
-        y *= self._cdf(x, k, h) ** (1. - h)
+        y = (1 - k * x) ** (1.0 / k - 1.0)
+        y *= self._cdf(x, k, h) ** (1.0 - h)
         return y
 
     def _ppf(self, q, k, h):
-        y = np.where(h == 0, -np.log(q), (1. - q ** h) / h)
-        y = np.where(k == 0, -np.log(y), (1. - y ** k) / k)
+        y = np.where(h == 0, -np.log(q), (1.0 - q**h) / h)
+        y = np.where(k == 0, -np.log(y), (1.0 - y**k) / k)
         return y
 
     def _lmom_fit(self, lmom_ratios):
@@ -467,8 +598,13 @@ class KappaGen(LmomDistrMixin, scipy.stats.rv_continuous):
 
         T3 = lmom_ratios[2]
         T4 = lmom_ratios[3]
-        if lmom_ratios[1] <= 0 or abs(T3) >= 1 or abs(T4) >= 1 or T4 <= (5 * T3 * T3 - 1) / 4 or \
-                        T4 >= (5 * T3 * T3 + 1) / 6:
+        if (
+            lmom_ratios[1] <= 0
+            or abs(T3) >= 1
+            or abs(T4) >= 1
+            or T4 <= (5 * T3 * T3 - 1) / 4
+            or T4 >= (5 * T3 * T3 + 1) / 6
+        ):
             raise ValueError("L-Moments invalid")
 
         G = (1 - 3 * T3) / (1 + T3)
@@ -482,15 +618,31 @@ class KappaGen(LmomDistrMixin, scipy.stats.rv_continuous):
                 if G > OFLGAM:
                     raise Exception("Failed to converge")
                 if H > 0:
-                    U1 = math.exp(special.gammaln(1 / H) - special.gammaln(1 / H + 1 + G))
-                    U2 = math.exp(special.gammaln(2 / H) - special.gammaln(2 / H + 1 + G))
-                    U3 = math.exp(special.gammaln(3 / H) - special.gammaln(3 / H + 1 + G))
-                    U4 = math.exp(special.gammaln(4 / H) - special.gammaln(4 / H + 1 + G))
+                    U1 = math.exp(
+                        special.gammaln(1 / H) - special.gammaln(1 / H + 1 + G)
+                    )
+                    U2 = math.exp(
+                        special.gammaln(2 / H) - special.gammaln(2 / H + 1 + G)
+                    )
+                    U3 = math.exp(
+                        special.gammaln(3 / H) - special.gammaln(3 / H + 1 + G)
+                    )
+                    U4 = math.exp(
+                        special.gammaln(4 / H) - special.gammaln(4 / H + 1 + G)
+                    )
                 else:
-                    U1 = math.exp(special.gammaln(-1 / H - G) - special.gammaln(-1 / H + 1))
-                    U2 = math.exp(special.gammaln(-2 / H - G) - special.gammaln(-2 / H + 1))
-                    U3 = math.exp(special.gammaln(-3 / H - G) - special.gammaln(-3 / H + 1))
-                    U4 = math.exp(special.gammaln(-4 / H - G) - special.gammaln(-4 / H + 1))
+                    U1 = math.exp(
+                        special.gammaln(-1 / H - G) - special.gammaln(-1 / H + 1)
+                    )
+                    U2 = math.exp(
+                        special.gammaln(-2 / H - G) - special.gammaln(-2 / H + 1)
+                    )
+                    U3 = math.exp(
+                        special.gammaln(-3 / H - G) - special.gammaln(-3 / H + 1)
+                    )
+                    U4 = math.exp(
+                        special.gammaln(-4 / H - G) - special.gammaln(-4 / H + 1)
+                    )
 
                 ALAM2 = U1 - 2 * U2
                 ALAM3 = -U1 + 6 * U2 - 6 * U3
@@ -528,16 +680,13 @@ class KappaGen(LmomDistrMixin, scipy.stats.rv_continuous):
                 HH = math.exp(TEMP)
                 scale = lmom_ratios[1] * G * HH / (ALAM2 * GAM)
                 loc = lmom_ratios[0] - scale / G * (1 - GAM * U1 / HH)
-                return OrderedDict([('k', G),
-                                    ('h', H),
-                                    ('loc', loc),
-                                    ('scale', scale)])
+                return OrderedDict([("k", G), ("h", H), ("loc", loc), ("scale", scale)])
             else:
                 XG = G
                 XH = H
                 XZ = Z
                 Xdist = DIST
-                RHH = 1 / (H ** 2)
+                RHH = 1 / (H**2)
                 if H > 0:
                     U1G = -U1 * special.psi(1 / H + 1 + G)
                     U2G = -U2 * special.psi(2 / H + 1 + G)
@@ -621,18 +770,31 @@ class KappaGen(LmomDistrMixin, scipy.stats.rv_continuous):
         Beta = []
         if ICASE == 1:
             for IR in range(1, nmom + 1):
-                ARG = DLGAM + special.gammaln(-IR / h - k) - special.gammaln(-IR / h) - k * math.log(-h)
+                ARG = (
+                    DLGAM
+                    + special.gammaln(-IR / h - k)
+                    - special.gammaln(-IR / h)
+                    - k * math.log(-h)
+                )
                 if abs(ARG) > OFL:
                     raise Exception("Calculation of L-Moments Failed")
                 Beta.append(math.exp(ARG))
 
         elif ICASE == 2:
             for IR in range(1, nmom + 1):
-                Beta.append(math.exp(DLGAM - k * math.log(IR)) * (1 - 0.5 * h * k * (1 + k) / IR))
+                Beta.append(
+                    math.exp(DLGAM - k * math.log(IR))
+                    * (1 - 0.5 * h * k * (1 + k) / IR)
+                )
 
         elif ICASE == 3:
             for IR in range(1, nmom + 1):
-                ARG = DLGAM + special.gammaln(1 + IR / h) - special.gammaln(1 + k + IR / h) - k * math.log(h)
+                ARG = (
+                    DLGAM
+                    + special.gammaln(1 + IR / h)
+                    - special.gammaln(1 + k + IR / h)
+                    - k * math.log(h)
+                )
                 if abs(ARG) > OFL:
                     raise Exception("Calculation of L-Moments Failed")
                 Beta.append(math.exp(ARG))
@@ -681,7 +843,7 @@ class KappaGen(LmomDistrMixin, scipy.stats.rv_continuous):
         return xmom
 
 
-kap = KappaGen(name='kappa', shapes='k, h')
+kap = KappaGen(name="kappa", shapes="k, h")
 
 
 class WakebyGen(LmomDistrMixin, scipy.stats.rv_continuous):
@@ -695,29 +857,32 @@ class WakebyGen(LmomDistrMixin, scipy.stats.rv_continuous):
         b = np.asarray(b)
         c = np.asarray(c)
         d = np.asarray(d)
-        check = np.where(b + d > 0,
-                         np.where(c == 0, d == 0, True),
-                         (b == c) & (c == d) & (d == 0))
+        check = np.where(
+            b + d > 0, np.where(c == 0, d == 0, True), (b == c) & (c == d) & (d == 0)
+        )
         np.putmask(check, c > 0, d > 0)
         np.putmask(check, c < 0, False)
         return check
 
     def _ppf(self, q, b, c, d):
-        z = -np.log(1. - q)
-        u = np.where(b == 0, z, (1. - np.exp(-b * z)) / b)
-        v = np.where(d == 0, z, (1. - np.exp(d * z)) / d)
+        z = -np.log(1.0 - q)
+        u = np.where(b == 0, z, (1.0 - np.exp(-b * z)) / b)
+        v = np.where(d == 0, z, (1.0 - np.exp(d * z)) / d)
         return u - c * v
 
     def _cdf(self, x, b, c, d):
-        if hasattr(x, '__iter__'):
-            if hasattr(b, '__iter__'):
+        if hasattr(x, "__iter__"):
+            if hasattr(b, "__iter__"):
                 # Assume x, b, c, d are arrays with matching length
-                result = np.array([self._cdfwak(_, parameters)
-                                   for (_, parameters) in zip(x, zip(b, c, d))])
+                result = np.array(
+                    [
+                        self._cdfwak(_, parameters)
+                        for (_, parameters) in zip(x, zip(b, c, d))
+                    ]
+                )
             else:
                 # Only x is an array, paras are scalars
-                result = np.array([self._cdfwak(_, [b, c, d])
-                                   for _ in x])
+                result = np.array([self._cdfwak(_, [b, c, d]) for _ in x])
         else:
             result = self._cdfwak(x, (b, c, d))
         return result
@@ -749,7 +914,7 @@ class WakebyGen(LmomDistrMixin, scipy.stats.rv_continuous):
         if C == 0:
             CDFWAK = 1
             if x >= (XI + A / B):
-                return (CDFWAK)
+                return CDFWAK
             Z = -math.log(1 - (x - XI) * B / A) / B
             if -Z >= UFL:
                 CDFWAK = 1 - math.exp(-Z)
@@ -819,12 +984,17 @@ class WakebyGen(LmomDistrMixin, scipy.stats.rv_continuous):
                     return CDFWAK
 
     def _pdf(self, x, b, c, d):
-        t = (1. - self._cdf(x, b, c, d))
+        t = 1.0 - self._cdf(x, b, c, d)
         f = t ** (d + 1) / (t ** (b + d) + c)
         return f
 
     def _lmom_fit(self, lmom_ratios):
-        if lmom_ratios[1] <= 0 or abs(lmom_ratios[2]) >= 1 or abs(lmom_ratios[3]) >= 1 or abs(lmom_ratios[4]) >= 1:
+        if (
+            lmom_ratios[1] <= 0
+            or abs(lmom_ratios[2]) >= 1
+            or abs(lmom_ratios[3]) >= 1
+            or abs(lmom_ratios[4]) >= 1
+        ):
             raise ValueError("Invalid L-Moments")
 
         ALAM1 = lmom_ratios[0]
@@ -852,8 +1022,20 @@ class WakebyGen(LmomDistrMixin, scipy.stats.rv_continuous):
             B = max(ROOT1, ROOT2)
             D = -min(ROOT1, ROOT2)
             if D < 1:
-                A = (1 + B) * (2 + B) * (3 + B) / (4 * (B + D)) * ((1 + D) * ALAM2 - (3 - D) * ALAM3)
-                C = -(1 - D) * (2 - D) * (3 - D) / (4 * (B + D)) * ((1 - B) * ALAM2 - (3 + B) * ALAM3)
+                A = (
+                    (1 + B)
+                    * (2 + B)
+                    * (3 + B)
+                    / (4 * (B + D))
+                    * ((1 + D) * ALAM2 - (3 - D) * ALAM3)
+                )
+                C = (
+                    -(1 - D)
+                    * (2 - D)
+                    * (3 - D)
+                    / (4 * (B + D))
+                    * ((1 - B) * ALAM2 - (3 + B) * ALAM3)
+                )
                 XI = ALAM1 - A / (1 + B) - C / (1 - D)
                 skip20 = bool(C >= 0 and A + C >= 0)
 
@@ -869,21 +1051,21 @@ class WakebyGen(LmomDistrMixin, scipy.stats.rv_continuous):
                 C = 0
                 D = 0
 
-        para = OrderedDict([('beta', B),
-                            ('gamma', C),
-                            ('delta', D),
-                            ('loc', XI),
-                            ('scale', A)])
+        para = OrderedDict(
+            [("beta", B), ("gamma", C), ("delta", D), ("loc", XI), ("scale", A)]
+        )
         return para
 
     def _lmom_ratios(self, beta, gamma, delta, loc, scale, nmom):
-        if (delta >= 1) \
-                or (beta + delta <= 0 and (beta != 0 or gamma != 0 or delta != 0)) \
-                or (scale == 0 and beta != 0) \
-                or (gamma == 0 and delta != 0) \
-                or (gamma < 0) \
-                or (scale + gamma < 0) \
-                or (scale == 0 and gamma == 0):
+        if (
+            (delta >= 1)
+            or (beta + delta <= 0 and (beta != 0 or gamma != 0 or delta != 0))
+            or (scale == 0 and beta != 0)
+            or (gamma == 0 and delta != 0)
+            or (gamma < 0)
+            or (scale + gamma < 0)
+            or (scale == 0 and gamma == 0)
+        ):
             raise ValueError("Invalid parameters")
 
         Y = scale / (1 + beta)
@@ -892,8 +1074,8 @@ class WakebyGen(LmomDistrMixin, scipy.stats.rv_continuous):
         if nmom == 1:
             return xmom
 
-        Y /= (2 + beta)
-        Z /= (2 - delta)
+        Y /= 2 + beta
+        Z /= 2 - delta
         ALAM2 = Y + Z
         xmom.append(ALAM2)
         if nmom == 2:
@@ -906,7 +1088,7 @@ class WakebyGen(LmomDistrMixin, scipy.stats.rv_continuous):
         return xmom
 
 
-wak = WakebyGen(name='wakeby', shapes='beta, gamma, delta')
+wak = WakebyGen(name="wakeby", shapes="beta, gamma, delta")
 
 """
 The following distributions are available in `scipy.stats` and are redefined here with an `LmomDistrMixin` to extend the
@@ -928,9 +1110,7 @@ class GenParetoGen(LmomDistrMixin, scipy.stats._continuous_distns.genpareto_gen)
         PARA2 = (1 + G) * (2 + G) * lmom_ratios[1]
         PARA1 = lmom_ratios[0] - PARA2 / (1 + G)
 
-        para = OrderedDict([('c', PARA3),
-                            ('loc', PARA1),
-                            ('scale', PARA2)])
+        para = OrderedDict([("c", PARA3), ("loc", PARA1), ("scale", PARA2)])
         return para
 
     def _lmom_ratios(self, c, loc, scale, nmom):
@@ -944,7 +1124,7 @@ class GenParetoGen(LmomDistrMixin, scipy.stats._continuous_distns.genpareto_gen)
         if nmom == 1:
             return xmom
 
-        Y /= (2 + G)
+        Y /= 2 + G
         xmom.append(scale * Y)
         if nmom == 2:
             return xmom
@@ -956,7 +1136,7 @@ class GenParetoGen(LmomDistrMixin, scipy.stats._continuous_distns.genpareto_gen)
         return xmom
 
 
-gpa = GenParetoGen(a=0.0, name='genpareto', shapes='c')
+gpa = GenParetoGen(a=0.0, name="genpareto", shapes="c")
 
 
 class ExponGen(LmomDistrMixin, scipy.stats._continuous_distns.expon_gen):
@@ -964,8 +1144,12 @@ class ExponGen(LmomDistrMixin, scipy.stats._continuous_distns.expon_gen):
         if lmom_ratios[1] <= 0:
             raise ValueError("L-Moments invalid")
 
-        para = OrderedDict([('loc', lmom_ratios[0] - 2 * lmom_ratios[1]),
-                            ('scale', 2 * lmom_ratios[1])])
+        para = OrderedDict(
+            [
+                ("loc", lmom_ratios[0] - 2 * lmom_ratios[1]),
+                ("scale", 2 * lmom_ratios[1]),
+            ]
+        )
         return para
 
     def _lmom_ratios(self, loc, scale, nmom):
@@ -983,7 +1167,7 @@ class ExponGen(LmomDistrMixin, scipy.stats._continuous_distns.expon_gen):
         return xmom
 
 
-exp = ExponGen(a=0.0, name='expon')
+exp = ExponGen(a=0.0, name="expon")
 
 
 class GammaGen(LmomDistrMixin, scipy.stats._continuous_distns.gamma_gen):
@@ -1004,12 +1188,12 @@ class GammaGen(LmomDistrMixin, scipy.stats._continuous_distns.gamma_gen):
             T = 1 - CV
             ALPHA = T * (B1 + T * B2) / (1 + T * (B3 + T * B4))
         else:
-            T = math.pi * CV ** 2
+            T = math.pi * CV**2
             ALPHA = (1 + A1 * T) / (T * (1 + T * (A2 + T * A3)))
 
-        para = OrderedDict([('a', ALPHA),
-                            ('loc', 0),
-                            ('scale', lmom_ratios[0] / ALPHA)])
+        para = OrderedDict(
+            [("a", ALPHA), ("loc", 0), ("scale", lmom_ratios[0] / ALPHA)]
+        )
         return para
 
     def _lmom_ratios(self, a, loc, scale, nmom):
@@ -1032,32 +1216,43 @@ class GammaGen(LmomDistrMixin, scipy.stats._continuous_distns.gamma_gen):
         xmom = []
         xmom.append(a * scale)
         if nmom == 1:
-            return (xmom)
+            return xmom
 
-        xmom.append(scale * 1 / math.sqrt(math.pi) * math.exp(special.gammaln(a + 0.5) - special.gammaln(a)))
+        xmom.append(
+            scale
+            * 1
+            / math.sqrt(math.pi)
+            * math.exp(special.gammaln(a + 0.5) - special.gammaln(a))
+        )
         if nmom == 2:
-            return (xmom)
+            return xmom
 
         if a < 1:
             Z = a
-            xmom.append((((E3 * Z + E2) * Z + E1) * Z + 1) / (((F3 * Z + F2) * Z + F1) * Z + 1))
+            xmom.append(
+                (((E3 * Z + E2) * Z + E1) * Z + 1) / (((F3 * Z + F2) * Z + F1) * Z + 1)
+            )
             if nmom == 3:
-                return (xmom)
+                return xmom
             xmom.append((((C3 * Z + C2) * Z + C1) * Z + C0) / ((D2 * Z + D1) * Z + 1))
             if nmom == 4:
-                return (xmom)
+                return xmom
         else:
             Z = 1 / a
-            xmom.append(math.sqrt(Z) * (((A3 * Z + A2) * Z + A1) * Z + A0) / ((B2 * Z + B1) * Z + 1))
+            xmom.append(
+                math.sqrt(Z)
+                * (((A3 * Z + A2) * Z + A1) * Z + A0)
+                / ((B2 * Z + B1) * Z + 1)
+            )
             if nmom == 3:
-                return (xmom)
+                return xmom
 
             xmom.append((((C3 * Z + C2) * Z + C1) * Z + C0) / ((D2 * Z + D1) * Z + 1))
             if nmom == 4:
-                return (xmom)
+                return xmom
 
 
-gam = GammaGen(a=0.0, name='gamma', shapes='a')
+gam = GammaGen(a=0.0, name="gamma", shapes="a")
 
 
 class GenextremeGen(LmomDistrMixin, scipy.stats._continuous_distns.genextreme_gen):
@@ -1087,39 +1282,37 @@ class GenextremeGen(LmomDistrMixin, scipy.stats._continuous_distns.genextreme_ge
             raise ValueError("L-Moments Invalid")
 
         if T3 <= 0:
-            G = (A0 + T3 * (A1 + T3 * (A2 + T3 * (A3 + T3 * A4)))) / (1 + T3 * (B1 + T3 * (B2 + T3 * B3)))
+            G = (A0 + T3 * (A1 + T3 * (A2 + T3 * (A3 + T3 * A4)))) / (
+                1 + T3 * (B1 + T3 * (B2 + T3 * B3))
+            )
 
             if T3 >= -0.8:
                 para3 = G
                 GAM = math.exp(special.gammaln(1 + G))
-                para2 = lmom_ratios[1] * G / (GAM * (1 - 2 ** -G))
+                para2 = lmom_ratios[1] * G / (GAM * (1 - 2**-G))
                 para1 = lmom_ratios[0] - para2 * (1 - GAM) / G
-                para = OrderedDict([('c', para3),
-                                    ('loc', para1),
-                                    ('scale', para2)])
+                para = OrderedDict([("c", para3), ("loc", para1), ("scale", para2)])
                 return para
             elif T3 <= -0.97:
                 G = 1 - math.log(1 + T3) / DL2
 
             T0 = (T3 + 3) * 0.5
             for IT in range(1, maxit):
-                X2 = 2 ** -G
-                X3 = 3 ** -G
+                X2 = 2**-G
+                X3 = 3**-G
                 XX2 = 1 - X2
                 XX3 = 1 - X3
                 T = XX3 / XX2
-                DERIV = (XX2 * X3 * DL3 - XX3 * X2 * DL2) / (XX2 ** 2)
+                DERIV = (XX2 * X3 * DL3 - XX3 * X2 * DL2) / (XX2**2)
                 GOLD = G
                 G -= (T - T0) / DERIV
 
                 if abs(G - GOLD) <= eps * G:
                     para3 = G
                     GAM = math.exp(special.gammaln(1 + G))
-                    para2 = lmom_ratios[1] * G / (GAM * (1 - 2 ** -G))
+                    para2 = lmom_ratios[1] * G / (GAM * (1 - 2**-G))
                     para1 = lmom_ratios[0] - para2 * (1 - GAM) / G
-                    para = OrderedDict([('c', para3),
-                                        ('loc', para1),
-                                        ('scale', para2)])
+                    para = OrderedDict([("c", para3), ("loc", para1), ("scale", para2)])
                     return para
             raise Exception("Iteration has not converged")
         else:
@@ -1128,30 +1321,38 @@ class GenextremeGen(LmomDistrMixin, scipy.stats._continuous_distns.genextreme_ge
             if abs(G) < SMALL:
                 para2 = lmom_ratios[1] / DL2
                 para1 = lmom_ratios[0] - EU * para2
-                para = OrderedDict([('c', 0),
-                                    ('loc', para1),
-                                    ('scale', para2)])
+                para = OrderedDict([("c", 0), ("loc", para1), ("scale", para2)])
             else:
                 para3 = G
                 GAM = math.exp(special.gammaln(1 + G))
-                para2 = lmom_ratios[1] * G / (GAM * (1 - 2 ** -G))
+                para2 = lmom_ratios[1] * G / (GAM * (1 - 2**-G))
                 para1 = lmom_ratios[0] - para2 * (1 - GAM) / G
-                para = OrderedDict([('c', para3),
-                                    ('loc', para1),
-                                    ('scale', para2)])
+                para = OrderedDict([("c", para3), ("loc", para1), ("scale", para2)])
             return para
 
     def _lmom_ratios(self, c, loc, scale, nmom):
-        ZMOM = [0.577215664901532861, 0.693147180559945309,
-                0.169925001442312363, 0.150374992788438185,
-                0.558683500577583138e-1, 0.581100239999710876e-1,
-                0.276242584297309125e-1, 0.305563766579053126e-1,
-                0.164650282258328802e-1, 0.187846624298170912e-1,
-                0.109328215063027148e-1, 0.126973126676329530e-1,
-                0.778982818057231804e-2, 0.914836179621999726e-2,
-                0.583332389328363588e-2, 0.690104287590348154e-2,
-                0.453267970180679549e-2, 0.538916811326595459e-2,
-                0.362407767772390e-2, 0.432387608605538096e-2]
+        ZMOM = [
+            0.577215664901532861,
+            0.693147180559945309,
+            0.169925001442312363,
+            0.150374992788438185,
+            0.558683500577583138e-1,
+            0.581100239999710876e-1,
+            0.276242584297309125e-1,
+            0.305563766579053126e-1,
+            0.164650282258328802e-1,
+            0.187846624298170912e-1,
+            0.109328215063027148e-1,
+            0.126973126676329530e-1,
+            0.778982818057231804e-2,
+            0.914836179621999726e-2,
+            0.583332389328363588e-2,
+            0.690104287590348154e-2,
+            0.453267970180679549e-2,
+            0.538916811326595459e-2,
+            0.362407767772390e-2,
+            0.432387608605538096e-2,
+        ]
         SMALL = 1e-6
         if c <= -1:
             raise ValueError("Invalid Parameters")
@@ -1170,7 +1371,7 @@ class GenextremeGen(LmomDistrMixin, scipy.stats._continuous_distns.genextreme_ge
             Z0 = 1
             for j in range(2, nmom):
                 DJ = j + 1
-                BETA = (1 - DJ ** -c) / XX2
+                BETA = (1 - DJ**-c) / XX2
                 Z0 *= (4 * DJ - 6) / DJ
                 Z = Z0 * 3 * (DJ - 1) / (DJ + 1)
                 SUM = Z0 * BETA - Z
@@ -1199,7 +1400,7 @@ class GenextremeGen(LmomDistrMixin, scipy.stats._continuous_distns.genextreme_ge
             return xmom
 
 
-gev = GenextremeGen(name='genextreme', shapes='c')
+gev = GenextremeGen(name="genextreme", shapes="c")
 
 
 class GumbelGen(LmomDistrMixin, scipy.stats._continuous_distns.gumbel_r_gen):
@@ -1210,16 +1411,32 @@ class GumbelGen(LmomDistrMixin, scipy.stats._continuous_distns.gumbel_r_gen):
 
         para2 = lmom_ratios[1] / math.log(2)
         para1 = lmom_ratios[0] - EU * para2
-        para = OrderedDict([('loc', para1),
-                            ('scale', para2)])
+        para = OrderedDict([("loc", para1), ("scale", para2)])
         return para
 
     def _lmom_ratios(self, loc, scale, nmom):
-        ZMOM = [0.577215664901532861, 0.693147180559945309, 0.169925001442312363, 0.150374992788438185,
-                0.0558683500577583138, 0.0581100239999710876, 0.0276242584297309125, 0.0305563766579053126,
-                0.0164650282258328802, 0.0187846624298170912, 0.0109328215063027148, 0.0126973126676329530,
-                0.00778982818057231804, 0.00914836179621999726, 0.00583332389328363588, 0.00690104287590348154,
-                0.00453267970180679549, 0.00538916811326595459, 0.00362407767772368790, 0.00432387608605538096]
+        ZMOM = [
+            0.577215664901532861,
+            0.693147180559945309,
+            0.169925001442312363,
+            0.150374992788438185,
+            0.0558683500577583138,
+            0.0581100239999710876,
+            0.0276242584297309125,
+            0.0305563766579053126,
+            0.0164650282258328802,
+            0.0187846624298170912,
+            0.0109328215063027148,
+            0.0126973126676329530,
+            0.00778982818057231804,
+            0.00914836179621999726,
+            0.00583332389328363588,
+            0.00690104287590348154,
+            0.00453267970180679549,
+            0.00538916811326595459,
+            0.00362407767772368790,
+            0.00432387608605538096,
+        ]
         xmom = [loc + scale * ZMOM[0]]
         if nmom == 1:
             return xmom
@@ -1233,7 +1450,7 @@ class GumbelGen(LmomDistrMixin, scipy.stats._continuous_distns.gumbel_r_gen):
         return xmom
 
 
-gum = GumbelGen(name='gumbel_r')
+gum = GumbelGen(name="gumbel_r")
 
 
 class NormGen(LmomDistrMixin, scipy.stats._continuous_distns.norm_gen):
@@ -1241,14 +1458,34 @@ class NormGen(LmomDistrMixin, scipy.stats._continuous_distns.norm_gen):
         if lmom_ratios[1] <= 0:
             raise ValueError("L-Moments invalid")
 
-        para = OrderedDict([('loc', lmom_ratios[0]),
-                            ('scale', lmom_ratios[1] * math.sqrt(math.pi))])
+        para = OrderedDict(
+            [("loc", lmom_ratios[0]), ("scale", lmom_ratios[1] * math.sqrt(math.pi))]
+        )
         return para
 
     def _lmom_ratios(self, *shapes, loc, scale, nmom):
-        ZMOM = [0, 0.564189583547756287, 0, 0.122601719540890947, 0, 0.0436611538950024944, 0, 0.0218431360332508776, 0,
-                0.0129635015801507746, 0, 0.00852962124191705402, 0, 0.00601389015179323333, 0, 0.00445558258647650150,
-                0, 0.00342643243578076985, 0, 0.00271267963048139365]
+        ZMOM = [
+            0,
+            0.564189583547756287,
+            0,
+            0.122601719540890947,
+            0,
+            0.0436611538950024944,
+            0,
+            0.0218431360332508776,
+            0,
+            0.0129635015801507746,
+            0,
+            0.00852962124191705402,
+            0,
+            0.00601389015179323333,
+            0,
+            0.00445558258647650150,
+            0,
+            0.00342643243578076985,
+            0,
+            0.00271267963048139365,
+        ]
         xmom = [loc]
         if nmom == 1:
             return xmom
@@ -1263,7 +1500,7 @@ class NormGen(LmomDistrMixin, scipy.stats._continuous_distns.norm_gen):
         return xmom
 
 
-nor = NormGen(name='norm')
+nor = NormGen(name="norm")
 
 
 class Pearson3Gen(LmomDistrMixin, scipy.stats._continuous_distns.pearson3_gen):
@@ -1291,22 +1528,26 @@ class Pearson3Gen(LmomDistrMixin, scipy.stats._continuous_distns.pearson3_gen):
         else:
             if T3 >= (1.0 / 3):
                 T = 1 - T3
-                Alpha = T * (D1 + T * (D2 + T * D3)) / (1 + T * (D4 + T * (D5 + T * D6)))
+                Alpha = (
+                    T * (D1 + T * (D2 + T * D3)) / (1 + T * (D4 + T * (D5 + T * D6)))
+                )
             else:
                 T = 3 * math.pi * T3 * T3
                 Alpha = (1 + C1 * T) / (T * (1 + T * (C2 + T * C3)))
 
             RTALPH = math.sqrt(Alpha)
-            BETA = math.sqrt(math.pi) * lmom_ratios[1] * math.exp(special.gammaln(Alpha) - special.gammaln(Alpha + 0.5))
+            BETA = (
+                math.sqrt(math.pi)
+                * lmom_ratios[1]
+                * math.exp(special.gammaln(Alpha) - special.gammaln(Alpha + 0.5))
+            )
             loc = lmom_ratios[0]
             scale = BETA * RTALPH
             skew = 2 / RTALPH
             if lmom_ratios[2] < 0:
                 skew *= -1
 
-        return OrderedDict([('skew', skew),
-                            ('loc', loc),
-                            ('scale', scale)])
+        return OrderedDict([("skew", skew), ("loc", loc), ("scale", scale)])
 
     def _lmom_ratios(self, skew, loc, scale, nmom):
         SMALL = 1e-6
@@ -1348,47 +1589,65 @@ class Pearson3Gen(LmomDistrMixin, scipy.stats._continuous_distns.pearson3_gen):
         else:
             Alpha = 4 / (skew * skew)
             Beta = abs(0.5 * scale * skew)
-            ALAM2 = CONST * math.exp(special.gammaln(Alpha + 0.5) - special.gammaln(Alpha))
+            ALAM2 = CONST * math.exp(
+                special.gammaln(Alpha + 0.5) - special.gammaln(Alpha)
+            )
             xmom.append(ALAM2 * Beta)
             if nmom == 2:
                 return xmom
 
             if Alpha < 1:
                 Z = Alpha
-                xmom.append((((E3 * Z + E2) * Z + E1) * Z + 1) / (((F3 * Z + F2) * Z + F1) * Z + 1))
+                xmom.append(
+                    (((E3 * Z + E2) * Z + E1) * Z + 1)
+                    / (((F3 * Z + F2) * Z + F1) * Z + 1)
+                )
                 if skew < 0:
                     xmom[2] *= -1
                 if nmom == 3:
                     return xmom
 
-                xmom.append((((G3 * Z + G2) * Z + G1) * Z + 1) / (((H3 * Z + H2) * Z + H1) * Z + 1))
+                xmom.append(
+                    (((G3 * Z + G2) * Z + G1) * Z + 1)
+                    / (((H3 * Z + H2) * Z + H1) * Z + 1)
+                )
                 return xmom
             else:
                 Z = 1.0 / Alpha
-                xmom.append(math.sqrt(Z) * (((A3 * Z + A2) * Z + A1) * Z + A0) / ((B2 * Z + B1) * Z + 1))
+                xmom.append(
+                    math.sqrt(Z)
+                    * (((A3 * Z + A2) * Z + A1) * Z + A0)
+                    / ((B2 * Z + B1) * Z + 1)
+                )
                 if skew < 0:
                     xmom[2] *= -1
                 if nmom == 3:
                     return xmom
 
-                xmom.append((((C3 * Z + C2) * Z + C1) * Z + C0) / ((D2 * Z + D1) * Z + 1))
+                xmom.append(
+                    (((C3 * Z + C2) * Z + C1) * Z + C0) / ((D2 * Z + D1) * Z + 1)
+                )
                 return xmom
 
 
-pe3 = Pearson3Gen(name="pearson3", shapes='skew')
+pe3 = Pearson3Gen(name="pearson3", shapes="skew")
 
 
 class FrechetRGen(LmomDistrMixin, scipy.stats._continuous_distns.weibull_min_gen):
     def _lmom_fit(self, lmom_ratios):
-        if lmom_ratios[1] <= 0 or lmom_ratios[2] >= 1 or lmom_ratios[2] <= -gum.lmom_ratios(nmom=3)[2]:
+        if (
+            lmom_ratios[1] <= 0
+            or lmom_ratios[2] >= 1
+            or lmom_ratios[2] <= -gum.lmom_ratios(nmom=3)[2]
+        ):
             raise ValueError("L-Moments invalid")
 
-        pg = gev.lmom_fit(lmom_ratios=[-lmom_ratios[0], lmom_ratios[1], -lmom_ratios[2]])
-        delta = 1 / pg['c']
-        beta = pg['scale'] / pg['c']
-        para = OrderedDict([('c', delta),
-                            ('loc', -pg['loc'] - beta),
-                            ('scale', beta)])
+        pg = gev.lmom_fit(
+            lmom_ratios=[-lmom_ratios[0], lmom_ratios[1], -lmom_ratios[2]]
+        )
+        delta = 1 / pg["c"]
+        beta = pg["scale"] / pg["c"]
+        para = OrderedDict([("c", delta), ("loc", -pg["loc"] - beta), ("scale", beta)])
         return para
 
     def _lmom_ratios(self, c, loc, scale, nmom):
@@ -1401,4 +1660,4 @@ class FrechetRGen(LmomDistrMixin, scipy.stats._continuous_distns.weibull_min_gen
         return xmom
 
 
-wei = FrechetRGen(a=0.0, name='weibull_min', shapes='c')
+wei = FrechetRGen(a=0.0, name="weibull_min", shapes="c")

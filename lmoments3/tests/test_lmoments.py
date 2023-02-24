@@ -1,8 +1,9 @@
 import unittest
+
 from numpy.testing import assert_almost_equal
+
 import lmoments3 as lm
-from lmoments3 import stats
-from lmoments3 import distr
+from lmoments3 import distr, stats
 from lmoments3.tests import DistributionTestCase
 
 
@@ -14,15 +15,31 @@ class TestLmoments(unittest.TestCase):
         assert_almost_equal(result, expected)
 
     def test_aic(self):
-        data = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 2.4, 3.5, 1.4, 6.5, 1.2, 6.8, 5.4, 3.4]
+        data = [
+            1.0,
+            2.0,
+            3.0,
+            4.0,
+            5.0,
+            6.0,
+            7.0,
+            2.4,
+            3.5,
+            1.4,
+            6.5,
+            1.2,
+            6.8,
+            5.4,
+            3.4,
+        ]
         gamfit = distr.gam.lmom_fit(data)
-        test1 = stats.AIC(data, 'gam', gamfit)
+        test1 = stats.AIC(data, "gam", gamfit)
         # TODO: assert something
 
 
 class TestExp(DistributionTestCase):
-    dist = 'exp'
-    paras = {'loc': 0.9527273, 'scale': 2.2836364}
+    dist = "exp"
+    paras = {"loc": 0.9527273, "scale": 2.2836364}
     correct_fit = [0.9527273, 2.2836364]
     correct_qua = [1.462306, 2.535623, 4.628098]
     correct_lmr = [3.2363636, 1.1418182, 0.3333333, 0.1666667]
@@ -33,12 +50,12 @@ class TestExp(DistributionTestCase):
 
 
 class TestGam(DistributionTestCase):
-    dist = 'gam'
+    dist = "gam"
     nmom = 4
     # The location parameter is not used for the gamma distribution, so len(paras) should actually return 2, for example
     # for calculating degrees of freedom etc.
     # TODO: find a nice way of dealing with this issue
-    paras = {'a': 2.295206, 'loc': 0, 'scale': 1.410054}
+    paras = {"a": 2.295206, "loc": 0, "scale": 1.410054}
     correct_fit = [2.295206, 1.410054]
     correct_qua = [1.447838, 2.780422, 4.766705]
     correct_lmr = [3.2363636, 1.1418181, 0.2186287, 0.1387734]
@@ -49,8 +66,8 @@ class TestGam(DistributionTestCase):
 
 
 class TestGev(DistributionTestCase):
-    dist = 'gev'
-    paras = {'loc': 2.1792884, 'scale': 1.3956404, 'c': -0.1555609}
+    dist = "gev"
+    paras = {"loc": 2.1792884, "scale": 1.3956404, "c": -0.1555609}
     correct_fit = [2.1792884, 1.3956404, -0.1555609]
     correct_qua = [1.539112, 2.705672, 4.537048]
     correct_lmr = [3.2363636, 1.1418182, 0.2738854, 0.1998461]
@@ -61,8 +78,8 @@ class TestGev(DistributionTestCase):
 
 
 class TestGlo(DistributionTestCase):
-    dist = 'glo'
-    paras = {'loc': 2.7406580, 'scale': 1.0060517, 'k': -0.2738854}
+    dist = "glo"
+    paras = {"loc": 2.7406580, "scale": 1.0060517, "k": -0.2738854}
     correct_fit = [2.7406580, 1.0060517, -0.2738854]
     correct_qua = [1.580189, 2.740658, 4.437061]
     correct_lmr = [3.2363636, 1.1418182, 0.2738854, 0.2291777]
@@ -73,8 +90,8 @@ class TestGlo(DistributionTestCase):
 
 
 class TestGno(DistributionTestCase):
-    dist = 'gno'
-    paras = {'loc': 2.6888917, 'scale': 1.7664322, 'k': -0.5707506}
+    dist = "gno"
+    paras = {"loc": 2.6888917, "scale": 1.7664322, "k": -0.5707506}
     correct_fit = [2.6888917, 1.7664322, -0.5707506]
     correct_qua = [1.508372, 2.688892, 4.597378]
     correct_lmr = [3.2363636, 1.1418182, 0.2738848, 0.1818274]
@@ -85,8 +102,12 @@ class TestGno(DistributionTestCase):
 
 
 class TestGpa(DistributionTestCase):
-    dist = 'gpa'
-    paras = {'loc': 0.7928727, 'scale': 2.7855796, 'c': -0.1400000}  # Note: `c` parameter needs to be negated!
+    dist = "gpa"
+    paras = {
+        "loc": 0.7928727,
+        "scale": 2.7855796,
+        "c": -0.1400000,
+    }  # Note: `c` parameter needs to be negated!
     correct_fit = [0.7928727, 2.7855796, 0.1400000]
     correct_qua = [1.404848, 2.632964, 4.806899]
     correct_lmr = [3.2363636, 1.1418182, 0.2738854, 0.1230499]
@@ -97,8 +118,8 @@ class TestGpa(DistributionTestCase):
 
 
 class TestGum(DistributionTestCase):
-    dist = 'gum'
-    paras = {'loc': 2.285519, 'scale': 1.647295}
+    dist = "gum"
+    paras = {"loc": 2.285519, "scale": 1.647295}
     correct_fit = [2.285519, 1.647295]
     correct_qua = [1.501596, 2.889274, 4.756363]
     correct_lmr = [3.236363, 1.141818, 0.169925, 0.150375]
@@ -109,23 +130,29 @@ class TestGum(DistributionTestCase):
 
 
 class TestKap(DistributionTestCase):
-    dist = 'kap'
-    paras = {'loc': -9.0633543, 'scale': 17.0127900, 'k': 0.9719618, 'h': 2.4727933}
+    dist = "kap"
+    paras = {"loc": -9.0633543, "scale": 17.0127900, "k": 0.9719618, "h": 2.4727933}
     correct_fit = [-9.0633543, 17.0127900, 0.9719618, 2.4727933]
     correct_qua = [1.311688, 2.454434, 5.286237]
     correct_lmr = [3.23636364, 1.14181818, 0.27388545, 0.02335466]
     correct_cdf = [0.4185230, 0.7772538, 0.9769973]
     correct_pdf = [0.09794121, 0.08128701, 0.07022161, 0.06197593]
     # This cannot be correct if lmr is correct
-    #correct_lmom = [3.236364, 1.141818, 0.09662925, 0.008239735, 0.00005919404]
-    correct_lmom = [3.236364, 1.141818, 0.31272738604748096, 0.0266667753757188, 1.91576195e-04]
+    # correct_lmom = [3.236364, 1.141818, 0.09662925, 0.008239735, 0.00005919404]
+    correct_lmom = [
+        3.236364,
+        1.141818,
+        0.31272738604748096,
+        0.0266667753757188,
+        1.91576195e-04,
+    ]
 
     correct_nlogl = 18.2664498
 
 
 class TestNor(DistributionTestCase):
-    dist = 'nor'
-    paras = {'loc': 3.236364, 'scale': 2.023820}
+    dist = "nor"
+    paras = {"loc": 3.236364, "scale": 2.023820}
     correct_fit = [3.236364, 2.023820]
     correct_qua = [1.533074, 3.236364, 4.939654]
     correct_lmr = [3.2363636, 1.1418182, 0.0000000, 0.1226017]
@@ -136,9 +163,9 @@ class TestNor(DistributionTestCase):
 
 
 class TestPe3(DistributionTestCase):
-    dist = 'pe3'
+    dist = "pe3"
     nmom = 4
-    paras = {'loc': 3.236364, 'scale': 2.199489, 'skew': 1.646184}
+    paras = {"loc": 3.236364, "scale": 2.199489, "skew": 1.646184}
     correct_fit = [3.236364, 2.199489, 1.646184]
     correct_qua = [1.447672, 2.663015, 4.705896]
     correct_lmr = [3.2363636, 1.1418182, 0.2738845, 0.1498865]
@@ -149,8 +176,8 @@ class TestPe3(DistributionTestCase):
 
 
 class TestWak(DistributionTestCase):
-    dist = 'wak'
-    paras = {'loc': 0.7928727, 'scale': 2.7855796, 'beta': 0.14, 'gamma': 0, 'delta': 0}
+    dist = "wak"
+    paras = {"loc": 0.7928727, "scale": 2.7855796, "beta": 0.14, "gamma": 0, "delta": 0}
     correct_fit = [0.7928727, 2.7855796, 0.1400000, 0.0000000, 0.0000000]
     correct_qua = [1.404848, 2.632964, 4.806899]
     correct_lmr = [3.2363636, 1.1418182, 0.2738854, 0.1230499]
@@ -161,14 +188,14 @@ class TestWak(DistributionTestCase):
 
 
 class TestWei(DistributionTestCase):
-    dist = 'wei'
-    paras = {'loc': 0.6740393, 'scale': 2.7087887, 'c': 1.1750218}
+    dist = "wei"
+    paras = {"loc": 0.6740393, "scale": 2.7087887, "c": 1.1750218}
     correct_fit = [0.6740393, 2.7087887, 1.1750218]
     correct_qua = [1.429808, 2.656981, 4.735337]
     correct_lmr = [3.2363636, 1.1418182, 0.2738853, 0.1413359]
     correct_cdf = [0.3507727, 0.8233116, 0.9600031]
     # This appears to be incorrect
-    #correct_pdf = [0.07149587, 0.04550752, 0.02836919, 0.01738135]
+    # correct_pdf = [0.07149587, 0.04550752, 0.02836919, 0.01738135]
     # New values taken from R, using `dweibull(x-0.6740393, shape=1.1750218, scale=2.7087887)`
     correct_pdf = [0.12592833, 0.08318826, 0.05339457, 0.03351231]
     correct_lmom = [3.2363636, 1.1418182, 0.31272723, 0.16137985, -0.09159867]

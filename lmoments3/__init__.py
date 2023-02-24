@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
-
 """
-This file contains a Python implimentation of the lmoments.f library created by
+This file contains a Python implementation of the lmoments.f library created by
 J. R. M. HOSKING.
 
-The base Fortran code is copyright of the IBM Corperation, and the licensing
+The base Fortran code is copyright of the IBM Corporation, and the licensing
 information is shown below:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -41,6 +39,7 @@ For more information, or to report bugs, contact:
 Licensing for Python Translation:
 ####################################################
     Copyright (C) 2014 Sam Gillespie
+    Copyright (C) 2023 Ouranos Inc., Trevor James Smith, Pascal Bourgault
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -53,17 +52,18 @@ Licensing for Python Translation:
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.Version 0.1.0:
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ####################################################
 
 """
 
 from ._version import get_versions
-__version__ = get_versions()['version']
+
+__version__ = get_versions()["version"]
 del get_versions
 
-import scipy.special
 import numpy as np
+import scipy.special
 
 
 def lmom_ratios(data, nmom=5):
@@ -104,7 +104,7 @@ def _samlmularge(x, nmom=5):
     if nmom == 1:
         return l[0]
 
-    #Setup comb table, where comb[i][x] refers to comb(x,i)
+    # Setup comb table, where comb[i][x] refers to comb(x,i)
     comb = []
     for i in range(1, nmom):
         comb.append([])
@@ -175,7 +175,12 @@ def _samlmusmall(x, nmom=5):
 
     comb3 = [scipy.special.comb(i, 2, exact=True) for i in range(n)]
     coefl3 = 1.0 / 3.0 / scipy.special.comb(n, 3, exact=True)
-    sum_xtrans = sum([(comb3[i] - 2 * comb1[i] * comb1[n - i - 1] + comb3[n - i - 1]) * x[i] for i in range(n)])
+    sum_xtrans = sum(
+        [
+            (comb3[i] - 2 * comb1[i] * comb1[n - i - 1] + comb3[n - i - 1]) * x[i]
+            for i in range(n)
+        ]
+    )
     l3 = coefl3 * sum_xtrans / l2
 
     if nmom == 3:
@@ -186,8 +191,17 @@ def _samlmusmall(x, nmom=5):
     comb5 = [scipy.special.comb(i, 3, exact=True) for i in range(n)]
     coefl4 = 0.25 / scipy.special.comb(n, 4, exact=True)
     sum_xtrans = sum(
-        [(comb5[i] - 3 * comb3[i] * comb1[n - i - 1] + 3 * comb1[i] * comb3[n - i - 1] - comb5[n - i - 1]) * x[i]
-         for i in range(n)])
+        [
+            (
+                comb5[i]
+                - 3 * comb3[i] * comb1[n - i - 1]
+                + 3 * comb1[i] * comb3[n - i - 1]
+                - comb5[n - i - 1]
+            )
+            * x[i]
+            for i in range(n)
+        ]
+    )
     l4 = coefl4 * sum_xtrans / l2
 
     if nmom == 4:
@@ -198,9 +212,18 @@ def _samlmusmall(x, nmom=5):
     comb7 = [scipy.special.comb(i, 4, exact=True) for i in range(n)]
     coefl5 = 0.2 / scipy.special.comb(n, 5, exact=True)
     sum_xtrans = sum(
-        [(comb7[i] - 4 * comb5[i] * comb1[n - i - 1] + 6 * comb3[i] * comb3[n - i - 1] -
-          4 * comb1[i] * comb5[n - i - 1] + comb7[n - i - 1]) * x[i]
-         for i in range(n)])
+        [
+            (
+                comb7[i]
+                - 4 * comb5[i] * comb1[n - i - 1]
+                + 6 * comb3[i] * comb3[n - i - 1]
+                - 4 * comb1[i] * comb5[n - i - 1]
+                + comb7[n - i - 1]
+            )
+            * x[i]
+            for i in range(n)
+        ]
+    )
     l5 = coefl5 * sum_xtrans / l2
 
     return [l1, l2, l3, l4, l5]
