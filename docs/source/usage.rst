@@ -1,32 +1,8 @@
 Using lmoments3
 ===============
 
-This library was designed to use L-moments to calculate optimal parameters for a number of distributions. This library
-extends a number of :mod:`scipy` distributions and provides some additional distributions frequently used in Extreme
-Value Analyses.
-
-========================= ================ ============= ===============================================================
-Name                      `lmoments3` name `scipy` name  Parameters
-========================= ================ ============= ===============================================================
-Exponential               `exp`            `expon`       `loc`, `scale`
-Gamma                     `gam`            `gamma`       `a`, `loc`, `scale` (The location parameter is not calculated
-                                                         using L-moments and assumed to be zero.)
-Generalised Extreme Value `gev`            `genextreme`  `c`, `loc`, `scale`
-Generalised Logistic      `glo`            n/a           `k`, `loc`, `scale`
-Generalised Normal        `gno`            n/a           `k`, `loc`, `scale`
-Generalised Pareto        `gpa`            `genpareto`   `c`, `loc`, `scale`
-Gumbel                    `gum`            `gumbel_r`    `loc`, `scale`
-Kappa                     `kap`            n/a           `k`, `h`, `loc`, `scale`
-Normal                    `nor`            `norm`        `loc`, `scale`
-Pearson III               `pe3`            `pearson3`    `skew`, `loc`, `scale`
-Wakeby                    `wak`            n/a           `beta`, `gamma`, `delta`, `loc`, `scale`
-Weibull                   `wei`            `weibull_min` `c`, `loc`, `scale`
-========================= ================ ============= ===============================================================
-
-All distributions in the table above are included in the :mod:`lmoments3.distr` module.
-
-L-moment estimation from sample data
-------------------------------------
+L-moments estimation from sample data
+-------------------------------------
 
 The primary purpose of this library is to estimate L-moments from a sample dataset.
 
