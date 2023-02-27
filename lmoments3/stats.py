@@ -34,7 +34,7 @@ def AIC(data, distr_name, distr_paras):
 
 
 def AICc(data, distr_name, distr_paras):
-    distr_f = getattr(distr, distr_name.lower())  # scipy rv_continous class
+    distr_f = getattr(distr, distr_name.lower())  # scipy rv_continuous class
 
     AICbase = AIC(data, distr_name, distr_paras)
     k = (
@@ -46,7 +46,7 @@ def AICc(data, distr_name, distr_paras):
 
 
 def BIC(data, distr_name, distr_paras):
-    distr_f = getattr(distr, distr_name.lower())  # scipy rv_continous class
+    distr_f = getattr(distr, distr_name.lower())  # scipy rv_continuous class
 
     NLL = distr_f.nnlf(data, **distr_paras)
     k = (
