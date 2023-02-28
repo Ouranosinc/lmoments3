@@ -11,7 +11,9 @@ include versioneer.py
 
 include docs/Makefile
 include docs/make.bat
-include docs/source/conf.py
 
 recursive-include lmoments3 *.py
-recursive-include docs/source *.rst
+recursive-include docs/source *.py *.rst
+
+exclude conda-recipe
+exclude conda-build.ps1
