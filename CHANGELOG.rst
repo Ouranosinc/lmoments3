@@ -2,7 +2,7 @@
 Changelog
 =========
 
-version 1.0.4 (unreleased)
+version 1.0.4 (2023-02-23)
 --------------------------
 - Rename `frechet_r_gen` to `weibull_min_r`, `frechet_r` being deprecated with SciPy 1.6
 - Migrated organisations from OpenHydrology to Ouranosinc:
@@ -10,6 +10,7 @@ version 1.0.4 (unreleased)
     * Code style now follows Black v2023.1
     * ReadTheDocs documentation for lmoments3 no longer nested within OpenHydrology
     * Documentation is now structured across pages
+- Updated versioneer to v0.28
 
 version 1.0.3 (2015-09-24)
 --------------------------
@@ -31,30 +32,30 @@ version 1.0.0 (2014-12-01)
 - Replaced many functions by standard scipy implementations
 - General bugfixes, code improvements and test
 
-version 0.3.1 (25/09/14)
-------------------------
+version 0.3.1 (2014-09-25)
+--------------------------
 - Fixed setup
 - Refactored unit tests
 
-version 0.3.0 (24/09/14)
-------------------------
+version 0.3.0 (2014-09-24)
+--------------------------
 - First release for Python 3.x
 
-version 0.2.2 (23/01/14)
-------------------------
+version 0.2.2 (2014-09-23)
+--------------------------
 - Improved samlmu function to support any value of nmom
 - Added Bayesian Information Criterion (BIC) function
 - Fixed import glitch that allowed users to import container files
 - General Bugfixes
 
-version 0.2.1 (15/01/14)
-------------------------
+version 0.2.1 (2014-01-15)
+--------------------------
 - Support for lists as F inputs for all QUA functions
 - Added Random Number Generator (rand) for all functions
 - Split the main lmoments.py file into several files, as the project is getting to large to maintain as one single file.
 
-version 0.2.0 (13/01/14)
-------------------------
+version 0.2.0 (2014-01-13)
+--------------------------
 - Added Probability Density Functions (PDF)
 - Added Reverse Lmoment Estimation Functions (LMOM)
 - Added Negative Log-Likelihood Function (NlogL)
