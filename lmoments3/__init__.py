@@ -1,3 +1,4 @@
+# noqa: D205, D400, D404,
 """
 This file contains a Python implementation of the lmoments.f library created by
 J. R. M. HOSKING.
@@ -57,27 +58,24 @@ Licensing for Python Translation:
 
 """
 
-from ._version import get_versions
-
-__version__ = get_versions()["version"]
-del get_versions
-
 import numpy as np
 import scipy.special
 
+from . import _version
+
+__version__ = _version.get_versions()["version"]
+
 
 def lmom_ratios(data, nmom=5):
-    """
-    Estimate `nmom` number of L-moments from a sample `data`.
+    """Estimate `nmom` number of L-moments from a sample `data`.
 
     :param data: Sequence of (sample) data
     :type data: list or array-like sequence
     :param nmom: number of L-moments to estimate
     :type nmom: int
-    :return: L-moment ratios like this: l1, l2, t3, t4, t5, .. . As in: items 3 and higher are L-moment ratios.
+    :return: L-moment ratios like this: l1, l2, t3, t4, t5, .. . As in: items 3 and higher are L-moment ratios.  # noqa: E501
     :rtype: list
     """
-
     if nmom <= 5:
         return _samlmusmall(data, nmom)
     else:
@@ -98,8 +96,8 @@ def _samlmularge(x, nmom=5):
     if n < nmom:
         raise ValueError("Insufficient length of data for specified nmoments")
 
-    ##Calculate first order
-    l = [np.sum(x) / scipy.special.comb(n, 1, exact=True)]
+    # Calculate first order
+    l = [np.sum(x) / scipy.special.comb(n, 1, exact=True)]  # noqa: E741
 
     if nmom == 1:
         return l[0]
