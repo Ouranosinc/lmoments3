@@ -2,7 +2,7 @@
 Changelog
 =========
 
-version 1.0.4 (2023-02-23)
+version 1.0.4 (2023-02-28)
 --------------------------
 - Rename `frechet_r_gen` to `weibull_min_r`, `frechet_r` being deprecated with SciPy 1.6
 - Migrated organisations from OpenHydrology to Ouranosinc:
