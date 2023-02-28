@@ -1,3 +1,19 @@
+include CHANGELOG.rst
+include LICENSE
 include README.rst
+
+include pyproject.toml
+include requirements.txt
+include requirements_dev.txt
+include setup.cfg
+include setup.py
 include versioneer.py
-include lmoments3/_version.py
+
+include docs/Makefile
+include docs/make.bat
+
+recursive-include lmoments3 *.py
+recursive-include docs/source *.py *.rst
+
+exclude conda-recipe
+exclude conda-build.ps1

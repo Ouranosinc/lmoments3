@@ -11,6 +11,11 @@ setup(
     name="lmoments3",
     author="Florenz A.P. Hollebrandse",
     author_email="f.a.p.hollebrandse@protonmail.ch",
+    project_urls={
+        "Homepage": "https://lmoments3.readthedocs.io/",
+        "Issue tracker": "https://github.com/Ouranosinc/lmoments3/issues",
+        "About Ouranos": "https://www.ouranos.ca/en/",
+    },
     packages=["lmoments3"],
     python_requires=">=3.8",
     version=versioneer.get_version(),
