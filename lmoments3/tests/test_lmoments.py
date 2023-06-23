@@ -33,8 +33,7 @@ class TestLmoments(unittest.TestCase):
             3.4,
         ]
         gamfit = distr.gam.lmom_fit(data)
-        test1 = stats.AIC(data, "gam", gamfit)
-        # TODO: assert something
+        stats.AIC(data, "gam", gamfit)
 
 
 class TestExp(DistributionTestCase):

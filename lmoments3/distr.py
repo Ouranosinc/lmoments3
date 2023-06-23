@@ -36,23 +36,20 @@ except ImportError:
 
 
 class LmomDistrMixin:
-    """
-    Mixin class to add L-moment methods to :class:`scipy.stats.rv_continous` distribution functions. Distributions using
-    the mixin should override the methods :meth:`._lmom_fit` and :meth:`.lmom_ratios`.
+    """Mixin class to add L-moment methods to :class:`scipy.stats.rv_continous` distribution functions.
+
+    Distributions using the mixin should override the methods :meth:`._lmom_fit` and :meth:`.lmom_ratios`.
     """
 
     def _lmom_fit(self, lmom_ratios):
         raise NotImplementedError
 
     def _lmom_ratios(self, *shapes, locs, scale, nmom):
-        """
-        When overriding, *shapes can be replaced by the actual distribution's shape parameter(s), if any.
-        """
+        """When overriding, *shapes can be replaced by the actual distribution's shape parameter(s), if any."""
         raise NotImplementedError
 
     def lmom_fit(self, data=[], lmom_ratios=[]):
-        """
-        Fit the distribution function to the given data or given L-moments.
+        """Fit the distribution function to the given data or given L-moments.
 
         :param data: Data to use in calculating the distribution parameters
         :type data: array_like
@@ -74,15 +71,14 @@ class LmomDistrMixin:
         return self._lmom_fit(lmom_ratios)
 
     def lmom(self, *args, nmom=5, **kwds):
-        """
-        Compute the distribution's L-moments, e.g. l1, l2, l3, l4, ..
+        """Compute the distribution's L-moments, e.g. l1, l2, l3, l4, ..
 
         :param args: Distribution parameters in order of shape(s), loc, scale
         :type args: float
         :param nmom: Number of moments to calculate
         :type nmom: int
-        :param kwds: Distribution parameters as named arguments. See :attr:`rv_continous.shapes` for names of shape
-                     parameters
+        :param kwds: Distribution parameters as named arguments.
+                     See :attr:`rv_continous.shapes` for names of shape parameters
         :type kwds: float
         :returns: List of L-moments
         :rtype: list
@@ -100,8 +96,8 @@ class LmomDistrMixin:
         :type args: float
         :param nmom: Number of moments to calculate
         :type nmom: int
-        :param kwds: Distribution parameters as named arguments. See :attr:`rv_continous.shapes` for names of shape
-                     parameters
+        :param kwds: Distribution parameters as named arguments.
+                     See :attr:`rv_continous.shapes` for names of shape parameters
         :type kwds: float
         :returns: List of L-moment ratios
         :rtype: list
@@ -128,7 +124,7 @@ class LmomDistrMixin:
         return scipy.stats.rv_continuous.nnlf(self, x=data, theta=theta)
 
     def freeze(self, *args, **kwds):
-        # Override `freeze` because we're extending the frozen version of the distribution.
+        """Override `freeze` because we're extending the frozen version of the distribution."""
         return LmomFrozenDistr(self, *args, **kwds)
 
 
@@ -614,6 +610,7 @@ class KappaGen(LmomDistrMixin, scipy.stats.rv_continuous):
 
         # Newton-Raphson Iteration
         for it in range(1, MAXIT + 1):
+            Success = 0
             for i in range(1, MAXSR + 1):
                 if G > OFLGAM:
                     raise Exception("Failed to converge")
@@ -659,10 +656,12 @@ class KappaGen(LmomDistrMixin, scipy.stats.rv_continuous):
                     Success = 1
                     break
                 else:
-                    DEL1 = 0.5 * DEL1
-                    DEL2 = 0.5 * DEL2
-                    G = XG - DEL1
-                    H = XH - DEL2
+                    pass
+                    # FIXME: The following variables are undefined
+                    # DEL1 = 0.5 * DEL1
+                    # DEL2 = 0.5 * DEL2
+                    # G = XG - DEL1
+                    # H = XH - DEL2
 
             if Success == 0:
                 raise Exception("Failed to converge")
@@ -1091,8 +1090,8 @@ class WakebyGen(LmomDistrMixin, scipy.stats.rv_continuous):
 wak = WakebyGen(name="wakeby", shapes="beta, gamma, delta")
 
 """
-The following distributions are available in `scipy.stats` and are redefined here with an `LmomDistrMixin` to extend the
-scipy distribution with L-moment methods.
+The following distributions are available in `scipy.stats` and are redefined
+here with an `LmomDistrMixin` to extend the scipy distribution with L-moment methods.
 """
 
 

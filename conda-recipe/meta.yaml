@@ -4,7 +4,7 @@ package:
 
 build:
   number: {{ environ.get('GIT_DESCRIBE_NUMBER', 0) }}
-  
+
 source:
   git_url: ..
 
@@ -25,8 +25,7 @@ test:
     - lmoments3
 
 about:
-  home: http://github.com/OpenHydrology/lmoments3
+  home: https://github.com/Oranosinc/lmoments3
   license: GPLv3
   license_file: LICENSE
   summary: Python library for estimating linear moments for statistical distributions
-

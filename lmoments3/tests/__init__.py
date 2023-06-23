@@ -3,7 +3,7 @@ import unittest
 from numpy.testing import assert_almost_equal
 
 import lmoments3 as lm
-from lmoments3 import distr, stats
+from lmoments3 import distr, stats  # noqa: F401
 
 
 class DistributionTestCase(unittest.TestCase):
