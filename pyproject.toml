@@ -96,7 +96,7 @@ py_version = 38
 append_only = true
 
 [tool.setuptools.dynamic]
-version = {attr = "myproject.__version__"}
+version = {attr = "lmoments3.__version__"}
 
 [tool.setuptools.packages.find]
 where = ["lmoments3"]
