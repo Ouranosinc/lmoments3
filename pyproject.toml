@@ -1,8 +1,74 @@
+[build-system]
+requires = ["flit_core >=3.8,<4", "versioneer[toml]"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "lmoments3"
+description = "A library extend scipy with L-moments to calculate optimal parameters for a number of distributions"
+authors = [
+  {name = "Florenz A.P. Hollebrandse", email = "f.a.p.hollebrandse@protonmail.ch"}
+]
+maintainers = [
+  {name = "Trevor James Smith", email = "smith.trevorj@ouranos.ca"},
+  {name = "Pascal Bourgault", email = "bourgault.pascal@ouranos.ca"}
+]
+readme = {file = "README.rst", content-type = "text/x-rst"}
+requires-python = ">=3.8.0"
+keywords = [
+  "distributions",
+  "fitting",
+  "l-moments",
+  "linear-moments",
+  "lmoments",
+  "lmoments3",
+  "scipy",
+  "statistics"
+]
+license = {file = "LICENSE"}
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+  "Natural Language :: English",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Topic :: Scientific/Engineering :: Mathematics"
+]
+dynamic = ["version"]
+dependencies = [
+  "numpy",
+  "scipy"
+]
+
+[project.optional-dependencies]
+dev = [
+  "black",
+  "blackdoc",
+  "flake8",
+  "pydocstyle",
+  "sphinx",
+  "sphinx-rtd-theme>=1.0"
+]
+
+[project.urls]
+"Homepage" = "https://lmoments3.readthedocs.io/en"
+"Source" = "https://github.com/Ouranosinc/lmoments3/"
+"Changelog" = "https://github.com/Ouranosinc/lmoments3/blob/main/CHANGELOG.rst"
+"Issue tracker" = "https://github.com/Ouranosinc/lmoments3/issues"
+"About Ouranos" = "https://www.ouranos.ca/en/"
+
 [tool]
 
 [tool.black]
 target-version = [
-  "py38", "py39", "py310"
+  "py38",
+  "py39",
+  "py310"
 ]
 extend-exclude = 'lmoments3/_version.py'
 
@@ -11,7 +77,27 @@ source = "lmoments3"
 relative_files = true
 omit = ["*/tests/*.py", "lmoments3/_version.py"]
 
+[tool.flit.sdist]
+include = [
+  "CHANGELOG.rst",
+  "LICENSE",
+  "README.rst",
+  "setup.cfg",
+  "versioneer.py",
+  "docs/make.bat",
+  "docs/Makefile",
+  "docs/source/**"
+]
+exclude = [".*", "conda-recipe/**", "conda-build.ps1", "docs/build/**"]
+
 [tool.isort]
 profile = "black"
 py_version = 38
 append_only = true
+
+[tool.versioneer]
+VCS = "git"
+style = "pep440"
+versionfile_source = "lmoments3/_version.py"
+versionfile_build = "lmoments3/_version.py"
+tag_prefix = "v"
