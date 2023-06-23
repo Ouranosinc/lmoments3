@@ -106,5 +106,5 @@ exclude = ["lmoments3.tests*"]
 VCS = "git"
 style = "pep440"
 versionfile_source = "lmoments3/_version.py"
-versionfile_build = "lmoments3/_version.py"
+versionfile_build = "_version.py"
 tag_prefix = "v"
