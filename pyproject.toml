@@ -1,6 +1,6 @@
 [build-system]
-requires = ["flit_core >=3.8,<4", "versioneer[toml]"]
-build-backend = "flit_core.buildapi"
+requires = ["setuptools", "versioneer[toml]"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "lmoments3"
