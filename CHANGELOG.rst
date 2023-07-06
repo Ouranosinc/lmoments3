@@ -2,6 +2,12 @@
 Changelog
 =========
 
+version 1.0.6 (2023-07-06)
+--------------------------
+- Adopted `pyproject.toml` with `setuptools` backend for build configuration (PEP 517 and PEP 621)
+- Various coding style standard improvements
+- Added GutHub Workflows for automated deployment to PyPI
+
 version 1.0.5 (2023-02-28)
 --------------------------
 - Rename `frechet_r_gen` to `weibull_min_r`, `frechet_r` being deprecated with SciPy 1.6
