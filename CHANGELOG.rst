@@ -6,6 +6,7 @@ version 1.0.7 (unreleased)
 --------------------------
 - Fix algorithm convergence for the `kappa` distribution.
 - Added Python 3.12 to the test suite and supported versions.
+- Avoid inplace modifications of input arrays in ``lmom_ratios``.
 
 version 1.0.6 (2023-07-06)
 --------------------------

@@ -48,7 +48,7 @@ class LmomDistrMixin:
         """When overriding, *shapes can be replaced by the actual distribution's shape parameter(s), if any."""
         raise NotImplementedError
 
-    def lmom_fit(self, data=[], lmom_ratios=[]):
+    def lmom_fit(self, data=None, lmom_ratios=None):
         """Fit the distribution function to the given data or given L-moments.
 
         :param data: Data to use in calculating the distribution parameters
@@ -59,11 +59,11 @@ class LmomDistrMixin:
         :rtype: :class:`OrderedDict`
         """
         n_min = self.numargs + 2
-        if len(data) > 0:
+        if data is not None:
             if len(data) <= n_min:
                 raise ValueError(f"At least {n_min} data points must be provided.")
             lmom_ratios = lm.lmom_ratios(data, nmom=n_min)
-        elif not lmom_ratios:
+        elif lmom_ratios is None:
             raise Exception("Either `data` or `lmom_ratios` must be provided.")
         elif len(lmom_ratios) < n_min:
             raise ValueError(f"At least {n_min} number of L-moments must be provided.")
