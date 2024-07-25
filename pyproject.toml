@@ -37,6 +37,7 @@ classifiers = [
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
   "Topic :: Scientific/Engineering :: Mathematics"
 ]
 dynamic = ["version"]
@@ -71,7 +72,8 @@ target-version = [
   "py38",
   "py39",
   "py310",
-  "py311"
+  "py311",
+  "py312"
 ]
 extend-exclude = 'lmoments3/_version.py'
 
