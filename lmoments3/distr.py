@@ -659,10 +659,10 @@ class KappaGen(LmomDistrMixin, scipy.stats.rv_continuous):
                     # These variables are only defined on a second iteration
                     # The Original fortran code sets them to 0
                     # but the comments imply that it is only for compiler checks
-                    DEL1 = 0.5 * DEL1
-                    DEL2 = 0.5 * DEL2
-                    G = XG - DEL1
-                    H = XH - DEL2
+                    DEL1 = 0.5 * DEL1  # noqa F821
+                    DEL2 = 0.5 * DEL2  # noqa F821
+                    G = XG - DEL1  # noqa F821
+                    H = XH - DEL2  # noqa F821
 
             if Success == 0:
                 raise Exception("Failed to converge")
