@@ -2,6 +2,10 @@
 Changelog
 =========
 
+version 1.0.7 (unreleased)
+--------------------------
+- Fix algorithm convergence for the `kappa` distribution.
+
 version 1.0.6 (2023-07-06)
 --------------------------
 - Adopted `pyproject.toml` with `setuptools` backend for build configuration (PEP 517 and PEP 621)
