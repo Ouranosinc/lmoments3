@@ -86,7 +86,7 @@ def _samlmularge(x, nmom=5):
     try:
         x = np.asarray(x, dtype=np.float64)
         n = len(x)
-        x.sort()
+        x = np.sort(x)
     except ValueError:
         raise ValueError("Input data to estimate L-moments must be numeric.")
 
@@ -142,7 +142,7 @@ def _samlmusmall(x, nmom=5):
     try:
         x = np.asarray(x, dtype=np.float64)
         n = len(x)
-        x.sort()
+        x = np.sort(x)
     except ValueError:
         raise ValueError("Input data to estimate L-moments must be numeric.")
 
