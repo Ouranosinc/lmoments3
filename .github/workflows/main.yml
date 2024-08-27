@@ -12,24 +12,32 @@ on:
       - lmoments3/__init__.py
   pull_request:
 
+concurrency:
+  # For a given workflow, if we push to the same branch, cancel all previous builds on that branch except on main.
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   black:
     runs-on: ubuntu-latest
     steps:
-      - name: Cancel previous runs
-        uses: styfle/cancel-workflow-action@0.11.0
+      - name: Harden Runner
+        uses: step-security/harden-runner@5c7944e73c4c2a096b17a9cb74d65b6c2bbafbde # v2.9.1
         with:
-          access_token: ${{ github.token }}
-      - uses: actions/checkout@v3
-      - name: Set up Python3.8
-        uses: actions/setup-python@v4
+          disable-sudo: true
+          egress-policy: audit
+      - name: Checkout Repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - name: Set up Python${{ matrix.python-version }}
+        uses: actions/setup-python@39cd14951b08e74b54015e9e001cdefcf80e669f # v5.1.1
         with:
           python-version: "3.8"
       - name: Install black
-        run: pip install black
+        run: |
+          pip install black>=24.8.0
       - name: Run linting suite
-        run: black --check lmoments3
+        run: |
+          black --check lmoments3
 
   test:
     name: Pip with Python${{ matrix.python-version }}
@@ -39,12 +47,20 @@ jobs:
       matrix:
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
     steps:
-      - uses: actions/checkout@v3
+      - name: Harden Runner
+        uses: step-security/harden-runner@5c7944e73c4c2a096b17a9cb74d65b6c2bbafbde # v2.9.1
+        with:
+          disable-sudo: true
+          egress-policy: audit
+      - name: Checkout Repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       - name: Set up Python${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@39cd14951b08e74b54015e9e001cdefcf80e669f # v5.1.1
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install lmoments3
-        run: pip install -e .
+        run: |
+          pip install -e .
       - name: Test
-        run: python -m unittest discover -v
+        run: |
+          python -m unittest discover -v

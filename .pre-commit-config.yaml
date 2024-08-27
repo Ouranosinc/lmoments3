@@ -3,12 +3,12 @@ default_language_version:
 
 repos:
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.3.1
+    rev: v3.17.0
     hooks:
       - id: pyupgrade
-        args: ['--py38-plus']
+        args: [ '--py38-plus' ]
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.6.0
     hooks:
       - id: trailing-whitespace
         exclude: setup.cfg
@@ -22,36 +22,35 @@ repos:
     hooks:
       - id: toml-sort-fix
   - repo: https://github.com/adrienverge/yamllint.git
-    rev: v1.32.0
+    rev: v1.35.1
     hooks:
       - id: yamllint
-        args: ['--config-file=.yamllint.yaml']
+        args: [ '--config-file=.yamllint.yaml' ]
         exclude: conda-recipe/meta.yaml
   - repo: https://github.com/psf/black
-    rev: 23.1.0
+    rev: 24.8.0
     hooks:
       - id: black
   - repo: https://github.com/pycqa/flake8
-    rev: 6.0.0
+    rev: 7.1.1
     hooks:
       - id: flake8
-        args: ['--config=setup.cfg']
+        args: [ '--config=setup.cfg' ]
   - repo: https://github.com/PyCQA/isort
-    rev: 5.12.0
+    rev: 5.13.2
     hooks:
       - id: isort
-        args: ['--settings-file=pyproject.toml']
+        args: [ '--settings-file=pyproject.toml' ]
 #  - repo: https://github.com/pycqa/pydocstyle
 #    rev: 6.3.0
 #    hooks:
 #      - id: pydocstyle
 #        args: ['--config=setup.cfg']
   - repo: https://github.com/keewis/blackdoc
-    rev: v0.3.8
+    rev: v0.3.9
     hooks:
       - id: blackdoc
-        additional_dependencies:
-          - 'black==23.1.0'
+        additional_dependencies: [ 'black==24.8.0' ]
   - repo: meta
     hooks:
       - id: check-hooks-apply

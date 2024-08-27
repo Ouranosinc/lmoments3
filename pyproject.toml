@@ -48,14 +48,14 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-  "black",
-  "blackdoc",
-  "build",
-  "flake8",
-  "pydocstyle",
-  "sphinx",
-  "sphinx-rtd-theme>=1.0",
-  "wheel"
+  "black >=24.8.0",
+  "blackdoc >=0.3.9",
+  "build >=1.0",
+  "flake8 >=7.0.0",
+  "pydocstyle >=6.3.0",
+  "sphinx >=6.0.0",
+  "sphinx-rtd-theme >=1.0",
+  "wheel >=0.42.0"
 ]
 
 [project.urls]
