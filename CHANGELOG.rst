@@ -2,11 +2,12 @@
 Changelog
 =========
 
-version 1.0.7 (unreleased)
+version 1.0.7 (2024-08-27)
 --------------------------
 - Fix algorithm convergence for the `kappa` distribution.
 - Added Python 3.12 to the test suite and supported versions.
 - Avoid inplace modifications of input arrays in ``lmom_ratios``.
+- Adjusted the base dependency pins for the development environment.
 
 version 1.0.6 (2023-07-06)
 --------------------------
