@@ -1,7 +1,7 @@
 lmoments3
 =========
 
-A Python 3.x library to estimate linear moments for statistical distribution functions.
+A Python3 library to estimate linear moments for statistical distribution functions.
 
 Requires the packages `numpy` and `scipy`.
 
@@ -16,12 +16,18 @@ lmoments3 can be installed via `pip`
 
     $ pip install lmoments3
 
+or, alternatively, you can install it from conda-forge:
+
+.. code-block:: console
+
+    $ conda install -c conda-forge lmoments3
+
 Documentation
 -------------
 
-Documentation is available on `Read the Docs <http://lmoments3.readthedocs.io/latest>`_.
+Documentation is available on `Read the Docs <http://lmoments3.readthedocs.io/stable>`_.
 
-Source code can be found at `GitHub <https://github.com/OpenHydrology/lmoments3>`_.
+Source code can be found at `GitHub <https://github.com/Ouranosinc/lmoments3>`_.
 
 Origin
 ------
@@ -89,4 +95,6 @@ The software remains licenced under the GNU General Public License, see <https:/
 The Python 3 port, is based on the original `lmoments package <https://pypi.python.org/pypi/lmoments/0.2.2>`_, version
 0.2.2.
 
-The Ouranosinc package was forked from `OpenHydrology's lmoments3 <https://github.com/OpenHydrology/lmoments3>`_. The primary aims of this fork are to provide maintenance for the existing codebase as well as update the project to benefit from more modern Python coding conventions, maintain compatibility with existing Python dependencies.
+The Ouranosinc package was forked from `OpenHydrology's lmoments3 <https://github.com/OpenHydrology/lmoments3>`_.
+The primary aims of this fork are to provide maintenance for the existing codebase as well as update the project to
+benefit from more modern Python coding conventions, maintain compatibility with existing Python dependencies.

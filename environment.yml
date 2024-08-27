@@ -1,0 +1,15 @@
+name: lmoments3
+channels:
+ - conda-forge
+dependencies:
+ - python >=3.9,<3.13
+ - numpy
+ - scipy
+ - black >=24.8.0
+ - blackdoc >=0.3.9
+ - python-build >=1.0
+ - flake8 >=7.0.0
+ - pydocstyle >=6.3.0
+ - sphinx >=6.0.0
+ - sphinx-rtd-theme >=1.0
+ - wheel >=0.42.0
