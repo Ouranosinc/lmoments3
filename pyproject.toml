@@ -38,6 +38,7 @@ classifiers = [
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
   "Topic :: Scientific/Engineering :: Mathematics"
 ]
 dynamic = ["version"]
@@ -63,7 +64,7 @@ dev = [
 "Source" = "https://github.com/Ouranosinc/lmoments3/"
 "Changelog" = "https://github.com/Ouranosinc/lmoments3/blob/main/CHANGELOG.rst"
 "Issue tracker" = "https://github.com/Ouranosinc/lmoments3/issues"
-"About Ouranos" = "https://www.ouranos.ca/en/"
+"About Ouranos" = "https://ouranos.ca/en/"
 
 [tool]
 
@@ -73,7 +74,8 @@ target-version = [
   "py39",
   "py310",
   "py311",
-  "py312"
+  "py312",
+  "py313"
 ]
 extend-exclude = 'lmoments3/_version.py'
 
@@ -93,7 +95,7 @@ include = [
   "docs/Makefile",
   "docs/source/**"
 ]
-exclude = [".*", "conda-recipe/**", "conda-build.ps1", "docs/build/**"]
+exclude = [".*", "conda-recipe/**", "docs/build/**"]
 
 [tool.isort]
 profile = "black"
