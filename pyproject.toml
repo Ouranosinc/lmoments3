@@ -77,20 +77,17 @@ target-version = [
   "py312",
   "py313"
 ]
-extend-exclude = 'lmoments3/_version.py'
 
 [tool.coverage.run]
 source = "lmoments3"
 relative_files = true
-omit = ["*/tests/*.py", "lmoments3/_version.py"]
+omit = ["*/tests/*.py"]
 
 [tool.flit.sdist]
 include = [
   "CHANGELOG.rst",
   "LICENSE",
   "README.rst",
-  "setup.cfg",
-  "versioneer.py",
   "docs/make.bat",
   "docs/Makefile",
   "docs/source/**"

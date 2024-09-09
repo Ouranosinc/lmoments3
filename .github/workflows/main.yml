@@ -62,4 +62,4 @@ jobs:
           python -m pip install --editable .
       - name: Test
         run: |
-          python -m unittest discover -v
+          python -m unittest discover src/lmoments3 -v
