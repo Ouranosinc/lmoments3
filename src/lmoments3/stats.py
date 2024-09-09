@@ -1,3 +1,5 @@
+"""Statistics functions for L-moments analysis."""
+
 # lmoments3 library
 # Copyright (C) 2012, 2014 J. R. M. Hosking, William Asquith,
 # Sam Gillespie, Pierre Gérard-Marchant, Florenz A. P. Hollebrandse
@@ -22,7 +24,8 @@ import math
 from . import distr
 
 
-def AIC(data, distr_name, distr_paras):
+def AIC(data, distr_name, distr_paras):  # noqa: N802
+    """Calculate the Akaike Information Criterion (AIC)."""
     distr_f = getattr(distr, distr_name.lower())  # scipy rv_continous class
 
     NLL = distr_f.nnlf(data, **distr_paras)
@@ -33,7 +36,8 @@ def AIC(data, distr_name, distr_paras):
     return AIC
 
 
-def AICc(data, distr_name, distr_paras):
+def AICc(data, distr_name, distr_paras):  # noqa: N802
+    """Calculate the corrected Akaike Information Criterion (AICc)."""
     distr_f = getattr(distr, distr_name.lower())  # scipy rv_continous class
 
     AICbase = AIC(data, distr_name, distr_paras)
@@ -45,7 +49,8 @@ def AICc(data, distr_name, distr_paras):
     return AICc
 
 
-def BIC(data, distr_name, distr_paras):
+def BIC(data, distr_name, distr_paras):  # noqa: N802
+    """Calculate the Bayesian Information Criterion (BIC)."""
     distr_f = getattr(distr, distr_name.lower())  # scipy rv_continous class
 
     NLL = distr_f.nnlf(data, **distr_paras)

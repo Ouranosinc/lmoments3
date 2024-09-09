@@ -1,3 +1,5 @@
+"""L-moments for scipy.stats distributions."""
+
 # lmoments3 library
 # Copyright (C) 2012, 2014 J. R. M. Hosking, William Asquith,
 # Sam Gillespie, Pierre Gérard-Marchant, Florenz A. P. Hollebrandse
@@ -112,7 +114,7 @@ class LmomDistrMixin:
 
         return self._lmom_ratios(*shapes, loc=loc, scale=scale, nmom=nmom)
 
-    def nnlf(self, data, *args, **kwds):
+    def nnlf(self, data, *args, **kwds):  # noqa: D102
         # Override `nnlf` to provide a more consistent interface with shape and loc and scale parameters
 
         data = np.asarray(data)
@@ -137,24 +139,26 @@ class LmomFrozenDistr(rv_continuous_frozen):
     def __init__(self, dist, *args, **kwds):
         super().__init__(dist, *args, **kwds)
 
-    def lmom(self, nmom=5):
+    def lmom(self, nmom=5):  # noqa: D102
         return self.dist.lmom(*self.args, nmom=nmom, **self.kwds)
 
-    def lmom_ratios(self, nmom=5):
+    def lmom_ratios(self, nmom=5):  # noqa: D102
         return self.dist.lmom_ratios(*self.args, nmom=nmom, **self.kwds)
 
 
-"""
-The following distributions are **not** available in :mod:`scipy.stats`.
-"""
+"""The following distributions are **not** available in :mod:`scipy.stats`."""
 
 
 class GenlogisticGen(LmomDistrMixin, scipy.stats.rv_continuous):
-    """
-    The CDF is given by
+    r"""Generalized Logistic distribution.
+
+    Notes
+    -----
+    The CDF is given by:
 
     .. math::
-       F(x;k) = \\frac{1}{1 + \\left[1 - kx\\right]^{1/k}}
+
+       F(x;k) = \frac{1}{1 + \left[1 - kx\right]^{1/k}}
     """
 
     def _argcheck(self, k):
@@ -376,11 +380,14 @@ glo = GenlogisticGen(name="glogistic", shapes="k")
 
 
 class GennormGen(LmomDistrMixin, scipy.stats.rv_continuous):
-    """
-    The CDF is given by
+    r"""Generalized Normal distribution.
+
+    Notes
+    -----
+    The CDF is given by:
 
     .. math::
-       F(x) = \\Phi{\\left[ -k^{-1} \\log\\{1 - kx\\} \\right]}
+       F(x) = \Phi{\\left[ -k^{-1} \log\{1 - kx\} \right]}
     """
 
     def _argcheck(self, k):
@@ -549,11 +556,15 @@ gno = GennormGen(name="gennorm", shapes="k")
 
 
 class KappaGen(LmomDistrMixin, scipy.stats.rv_continuous):
-    """
-    The CDF is given by
+    r"""Kappa Generalization Series Distribution.
+
+    Notes
+    -----
+    The CDF is given by:
 
     .. math::
-       F(x; a, b) = \\left[1-h\\{1-kx\\}^{1/k}\\right]^{1/h}
+
+       F(x; a, b) = \left[1-h\{1-kx\}^{1/k}\right]^{1/h}
     """
 
     def _argcheck(self, k, h):
@@ -750,7 +761,7 @@ class KappaGen(LmomDistrMixin, scipy.stats.rv_continuous):
                     H = XH - DEL2
                     Z = G + H * 0.725
 
-    def _lmom_ratios(self, k, h, loc, scale, nmom):
+    def _lmom_ratios(self, k, h, loc, scale, nmom):  # noqa: C901
         EU = 0.577215664901532861
         SMALL = 1e-8
         OFL = 170
@@ -847,10 +858,15 @@ kap = KappaGen(name="kappa", shapes="k, h")
 
 
 class WakebyGen(LmomDistrMixin, scipy.stats.rv_continuous):
-    """
-    The Wakeby distribution is defined by the transformation:
-    (x-xi)/a = (1/b).[1 - (1-U)^b] - (c/d).[1 - (1-U)^(-d)]
+    """Wakeby Generalization Statistical Distribution.
 
+    Notes
+    -----
+    The Wakeby distribution is defined by the transformation:
+
+    .. math::
+
+        (x-xi)/a = (1/b).[1 - (1-U)^b] - (c/d).[1 - (1-U)^(-d)]
     """
 
     def _argcheck(self, b, c, d):
@@ -887,7 +903,7 @@ class WakebyGen(LmomDistrMixin, scipy.stats.rv_continuous):
             result = self._cdfwak(x, (b, c, d))
         return result
 
-    def _cdfwak(self, x, para):
+    def _cdfwak(self, x, para):  # noqa: C901
         # Only for a single value of x!
 
         EPS = 1e-8
@@ -1097,6 +1113,8 @@ here with an `LmomDistrMixin` to extend the scipy distribution with L-moment met
 
 
 class GenParetoGen(LmomDistrMixin, scipy.stats._continuous_distns.genpareto_gen):
+    """Generalized Pareto distribution with L-moment methods."""
+
     def _lmom_fit(self, lmom_ratios):
         T3 = lmom_ratios[2]
         if lmom_ratios[1] <= 0 or abs(T3) >= 1:
@@ -1140,6 +1158,8 @@ gpa = GenParetoGen(a=0.0, name="genpareto", shapes="c")
 
 
 class ExponGen(LmomDistrMixin, scipy.stats._continuous_distns.expon_gen):
+    """Exponential distribution with L-moment methods."""
+
     def _lmom_fit(self, lmom_ratios):
         if lmom_ratios[1] <= 0:
             raise ValueError("L-Moments invalid")
@@ -1171,6 +1191,8 @@ exp = ExponGen(a=0.0, name="expon")
 
 
 class GammaGen(LmomDistrMixin, scipy.stats._continuous_distns.gamma_gen):
+    """Gamma distribution with L-moment methods."""
+
     def _lmom_fit(self, lmom_ratios):
         A1 = -0.3080
         A2 = -0.05812
@@ -1256,6 +1278,8 @@ gam = GammaGen(a=0.0, name="gamma", shapes="a")
 
 
 class GenextremeGen(LmomDistrMixin, scipy.stats._continuous_distns.genextreme_gen):
+    """Generalized Extreme Value distribution with L-moment methods."""
+
     def _lmom_fit(self, lmom_ratios):
         SMALL = 1e-5
         eps = 1e-6
@@ -1404,6 +1428,8 @@ gev = GenextremeGen(name="genextreme", shapes="c")
 
 
 class GumbelGen(LmomDistrMixin, scipy.stats._continuous_distns.gumbel_r_gen):
+    """Gumbel distribution with L-moment methods."""
+
     def _lmom_fit(self, lmom_ratios):
         EU = 0.577215664901532861
         if lmom_ratios[1] <= 0:
@@ -1454,6 +1480,8 @@ gum = GumbelGen(name="gumbel_r")
 
 
 class NormGen(LmomDistrMixin, scipy.stats._continuous_distns.norm_gen):
+    """Normal distribution with L-moment methods."""
+
     def _lmom_fit(self, lmom_ratios):
         if lmom_ratios[1] <= 0:
             raise ValueError("L-Moments invalid")
@@ -1504,6 +1532,8 @@ nor = NormGen(name="norm")
 
 
 class Pearson3Gen(LmomDistrMixin, scipy.stats._continuous_distns.pearson3_gen):
+    """Pearson Type III distribution with L-moment methods."""
+
     def _lmom_fit(self, lmom_ratios):
         Small = 1e-6
         # Constants used in Minimax Approx:
@@ -1634,6 +1664,8 @@ pe3 = Pearson3Gen(name="pearson3", shapes="skew")
 
 
 class FrechetRGen(LmomDistrMixin, scipy.stats._continuous_distns.weibull_min_gen):
+    """Frechet distribution with L-moment methods."""
+
     def _lmom_fit(self, lmom_ratios):
         if (
             lmom_ratios[1] <= 0

@@ -1,4 +1,5 @@
-# noqa: D205, D400, D404,
+# noqa: D205,D400,D404
+"""L-moments estimation and calculation functions."""
 """
 This file contains a Python implementation of the lmoments.f library created by
 J. R. M. HOSKING.
@@ -40,7 +41,7 @@ For more information, or to report bugs, contact:
 Licensing for Python Translation:
 ####################################################
     Copyright (C) 2014 Sam Gillespie
-    Copyright (C) 2023 Ouranos Inc., Trevor James Smith, Pascal Bourgault
+    Copyright (C) 2023 Trevor James Smith, Pascal Bourgault, David Huard
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -53,17 +54,13 @@ Licensing for Python Translation:
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ####################################################
-
 """
+import numpy as np  # noqa: E402
+import scipy.special  # noqa: E402
 
-import numpy as np
-import scipy.special
-
-from . import _version
-
-__version__ = _version.get_versions()["version"]
+from ._version import __version__  # noqa: E402
 
 
 def lmom_ratios(data, nmom=5):
