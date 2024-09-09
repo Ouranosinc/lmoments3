@@ -9,7 +9,7 @@ on:
       - README.rst
       - setup.cfg
       - setup.py
-      - lmoments3/__init__.py
+      - src/lmoments3/__init__.py
   pull_request:
 
 concurrency:
@@ -18,7 +18,8 @@ concurrency:
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
-  black:
+  lint:
+    name: Linting Suite
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -28,24 +29,21 @@ jobs:
           egress-policy: audit
       - name: Checkout Repository
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
-      - name: Set up Python${{ matrix.python-version }}
-        uses: actions/setup-python@39cd14951b08e74b54015e9e001cdefcf80e669f # v5.1.1
+      - name: Set up Python3
+        uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5.1.0
         with:
-          python-version: "3.8"
-      - name: Install black
-        run: |
-          pip install black>=24.8.0
-      - name: Run linting suite
-        run: |
-          black --check lmoments3
+          python-version: "3.x"
+          cache: "pip"
+      - name: Run pre-commit hooks
+        uses: pre-commit/action@2c7b3805fd2a0fd8c1884dcaebf91fc102a13ecd # v3.0.1
 
   test:
     name: Pip with Python${{ matrix.python-version }}
-    needs: black
+    needs: lint
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13.0-rc.1"]
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@5c7944e73c4c2a096b17a9cb74d65b6c2bbafbde # v2.9.1
@@ -58,9 +56,10 @@ jobs:
         uses: actions/setup-python@39cd14951b08e74b54015e9e001cdefcf80e669f # v5.1.1
         with:
           python-version: ${{ matrix.python-version }}
+          cache: "pip"
       - name: Install lmoments3
         run: |
-          pip install -e .
+          python -m pip install --editable .
       - name: Test
         run: |
           python -m unittest discover -v
