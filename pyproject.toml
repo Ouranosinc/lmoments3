@@ -165,4 +165,3 @@ max-doc-length = 180
 convention = "numpy"
 
 [tool.setuptools_scm]
-version_file = "lmoments3/_version.py"
