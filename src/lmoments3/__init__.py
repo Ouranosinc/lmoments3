@@ -57,10 +57,18 @@ Licensing for Python Translation:
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ####################################################
 """
+import logging  # noqa: E402
+from importlib.metadata import PackageNotFoundError, version  # noqa: E402
+
 import numpy as np  # noqa: E402
 import scipy.special  # noqa: E402
 
-from ._version import __version__  # noqa: E402
+
+try:
+    __version__ = version("lmoments3")
+except PackageNotFoundError:
+    logging.error("lmoments3 is not installed.")
+    pass
 
 
 def lmom_ratios(data, nmom=5):
