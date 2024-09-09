@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools", "versioneer[toml]"]
+requires = ["setuptools", "setuptools-scm>=8"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -100,9 +100,71 @@ profile = "black"
 py_version = 38
 append_only = true
 
-[tool.versioneer]
-VCS = "git"
-style = "pep440"
-versionfile_source = "lmoments3/_version.py"
-versionfile_build = "lmoments3/_version.py"
-tag_prefix = "v"
+[tool.ruff]
+src = ["lmoments3"]
+line-length = 150
+target-version = "py38"
+exclude = [
+  ".eggs",
+  ".git",
+  "build",
+  "docs"
+]
+
+[tool.ruff.lint]
+extend-select = [
+  "RUF022" # unsorted-dunder-all
+]
+ignore = [
+  "COM", # commas
+  "D205", # blank-line-after-summary
+  "D400", # ends-in-period
+  "D401", # non-imperative-mood
+  "N806", # variable-name
+  # FIXME: the following should be addressed in a future PR
+  "PERF401" # manual-list-comprehension
+]
+preview = true
+select = [
+  "BLE", # blind-except
+  "C90", # mccabe-complexity
+  "D", # docstrings
+  "E", # pycodestyle errors
+  "FLY002", # static-join-to-fstring
+  "G", # logging-format
+  "N", # naming conventions
+  "PERF", # iterator performance
+  "PTH", # pathlib
+  "RUF010", # explicit-f-string-type-conversion
+  "RUF013", # implicit-optional
+  "S", # bandit
+  "UP", # python version conventions
+  "W" # pycodestyle warnings
+]
+
+[tool.ruff.lint.flake8-bandit]
+check-typed-exception = true
+
+[tool.ruff.lint.isort]
+known-first-party = ["lmoments3"]
+case-sensitive = true
+detect-same-package = false
+lines-after-imports = 2
+no-lines-before = ["future", "standard-library"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 20
+
+[tool.ruff.lint.per-file-ignores]
+"docs/**" = ["E402"]
+"src/lmoments3/**/__init__.py" = ["F401", "F403"]
+"src/lmoments3/tests/**" = ["D100", "D101", "D102", "D103", "S101"]
+
+[tool.ruff.lint.pycodestyle]
+max-doc-length = 180
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.setuptools_scm]
+version_file = "lmoments3/_version.py"
