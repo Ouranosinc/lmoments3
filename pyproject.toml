@@ -97,15 +97,9 @@ include = [
 ]
 exclude = [".*", "conda-recipe/**", "docs/build/**"]
 
-[tool.isort]
-profile = "black"
-py_version = 38
-append_only = true
-
 [tool.ruff]
 src = ["lmoments3"]
 line-length = 150
-target-version = "py38"
 exclude = [
   ".eggs",
   ".git",
@@ -128,12 +122,14 @@ ignore = [
 ]
 preview = true
 select = [
+  "B", # bugbear
   "BLE", # blind-except
   "C90", # mccabe-complexity
   "D", # docstrings
   "E", # pycodestyle errors
   "FLY002", # static-join-to-fstring
   "G", # logging-format
+  "I", # import-order
   "N", # naming conventions
   "PERF", # iterator performance
   "PTH", # pathlib

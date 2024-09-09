@@ -122,7 +122,7 @@ Example:  Calculate the Negative Log Likelihood of a Gamma distribution with par
 Other statistical methods
 -------------------------
 
-The :mod:`lmoments3.stats` module provides some additional statistical parametes to evaluate fitting of data to
+The :mod:`lmoments3.stats` module provides some additional statistical parameters to evaluate fitting of data to
 distribution function.
 
 :func:`AIC(data, distr_name, distr_paras)`

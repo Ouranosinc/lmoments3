@@ -29,6 +29,7 @@ from scipy import special
 
 import lmoments3 as lm
 
+
 try:
     # Scipy >= 1.9
     from scipy.stats._distn_infrastructure import rv_continuous_frozen
@@ -622,7 +623,7 @@ class KappaGen(LmomDistrMixin, scipy.stats.rv_continuous):
         # Newton-Raphson Iteration
         for it in range(1, MAXIT + 1):
             Success = 0
-            for i in range(1, MAXSR + 1):
+            for _ in range(1, MAXSR + 1):
                 if G > OFLGAM:
                     raise Exception("Failed to converge")
                 if H > 0:
@@ -959,7 +960,7 @@ class WakebyGen(LmomDistrMixin, scipy.stats.rv_continuous):
             if D > 0:
                 Z = math.log((x - XI) * D / C + 1) / D
 
-        for IT in range(1, MAXIT + 1):
+        for _IT in range(1, MAXIT + 1):
             EB = 0
             BZ = -B * Z
             if BZ >= UFL:
@@ -1321,7 +1322,7 @@ class GenextremeGen(LmomDistrMixin, scipy.stats._continuous_distns.genextreme_ge
                 G = 1 - math.log(1 + T3) / DL2
 
             T0 = (T3 + 3) * 0.5
-            for IT in range(1, maxit):
+            for _IT in range(1, maxit):
                 X2 = 2**-G
                 X3 = 3**-G
                 XX2 = 1 - X2

@@ -23,14 +23,14 @@ class TestSamlmuSpeed(unittest.TestCase):
 
     def test_n50_nmom3(self):
         start_i = 0
-        for i in range(10000):
+        for _i in range(10000):
             l1, l2, t3 = lm.lmom_ratios(self.record[start_i : start_i + self.n], nmom=3)
             assert l2 / l1
             start_i += self.n
 
     def test_n50_nmom4(self):
         start_i = 0
-        for i in range(10000):
+        for _i in range(10000):
             l1, l2, t3, t4 = lm.lmom_ratios(
                 self.record[start_i : start_i + self.n], nmom=4
             )
@@ -49,5 +49,5 @@ class TestKappaSpeed(unittest.TestCase):
     def test_n50(self):
         n = 50
         kappa_distr = distr.kap(loc=-0.7, scale=2.6, k=0.9, h=1.6)
-        for i in range(10000):
+        for _i in range(10000):
             kappa_distr.ppf(np.random.random(n))

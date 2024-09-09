@@ -84,8 +84,8 @@ def _samlmularge(x, nmom=5):
         x = np.asarray(x, dtype=np.float64)
         n = len(x)
         x = np.sort(x)
-    except ValueError:
-        raise ValueError("Input data to estimate L-moments must be numeric.")
+    except ValueError as err:
+        raise ValueError("Input data to estimate L-moments must be numeric.") from err
 
     if nmom <= 0:
         raise ValueError("Invalid number of sample L-moments")
@@ -111,7 +111,7 @@ def _samlmularge(x, nmom=5):
         xtrans = []
         for i in range(0, n):
             coeftemp = []
-            for j in range(0, mom):
+            for _j in range(0, mom):
                 coeftemp.append(1)
 
             for j in range(0, mom - 1):
@@ -140,8 +140,8 @@ def _samlmusmall(x, nmom=5):
         x = np.asarray(x, dtype=np.float64)
         n = len(x)
         x = np.sort(x)
-    except ValueError:
-        raise ValueError("Input data to estimate L-moments must be numeric.")
+    except ValueError as err:
+        raise ValueError("Input data to estimate L-moments must be numeric.") from err
 
     if nmom <= 0 or nmom > 5:
         raise ValueError("Invalid number of sample L-moments")

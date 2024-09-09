@@ -26,7 +26,15 @@ repos:
       - id: yamllint
         args: [ '--config-file=.yamllint.yaml' ]
         exclude: conda-recipe/meta.yaml
-  - repo: https://github.com/psf/black
+  - repo: https://github.com/pre-commit/pygrep-hooks
+    rev: v1.10.0
+    hooks:
+      - id: python-no-eval
+      - id: python-no-log-warn
+#      - id: rst-backticks
+      - id: rst-directive-colons
+      - id: rst-inline-touching-normal
+  - repo: https://github.com/psf/black-pre-commit-mirror
     rev: 24.8.0
     hooks:
       - id: black
@@ -35,22 +43,23 @@ repos:
     hooks:
       - id: flake8
         args: [ '--config=.flake8' ]
-  - repo: https://github.com/PyCQA/isort
-    rev: 5.13.2
-    hooks:
-      - id: isort
-        args: [ '--settings-file=pyproject.toml' ]
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.5.7
     hooks:
       - id: ruff
-        args: [ '--fix' ]
+        args: [ '--fix', '--show-fixes' ]
 #      - id: ruff-format
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.2.4
+    hooks:
+      - id: codespell
+        additional_dependencies: [ 'tomli' ]
   - repo: https://github.com/keewis/blackdoc
     rev: v0.3.9
     hooks:
       - id: blackdoc
         additional_dependencies: [ 'black==24.8.0' ]
+      - id: blackdoc-autoupdate-black
   - repo: meta
     hooks:
       - id: check-hooks-apply
