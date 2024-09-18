@@ -2,6 +2,18 @@
 Changelog
 =========
 
+version 1.0.8 (2024-09-18)
+--------------------------
+- Use a `src`-based library structure.
+- Many internal improvements to the codebase:
+    * Migrated more configurations to the `pyproject.toml` file.
+    * Use dependency groups to reduce the number of PRs opened for dependabot.
+    * Add caching and cache-cleaning for test builds on GitHub Actions.
+    * Use commit hashes for all CI dependencies and Actions.
+    * Use `ruff` for coding standards, replace `isort` with `ruff`
+    * Replace `versioneer` with `setuptools-scm` for version tracking.
+    * Add `codespell` and `pygrep-hooks` to pre-commit configuration.
+
 version 1.0.7 (2024-08-27)
 --------------------------
 - Fix algorithm convergence for the `kappa` distribution.
