@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools", "versioneer[toml]"]
+requires = ["setuptools", "setuptools-scm>=8"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -38,6 +38,7 @@ classifiers = [
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
   "Topic :: Scientific/Engineering :: Mathematics"
 ]
 dynamic = ["version"]
@@ -63,7 +64,7 @@ dev = [
 "Source" = "https://github.com/Ouranosinc/lmoments3/"
 "Changelog" = "https://github.com/Ouranosinc/lmoments3/blob/main/CHANGELOG.rst"
 "Issue tracker" = "https://github.com/Ouranosinc/lmoments3/issues"
-"About Ouranos" = "https://www.ouranos.ca/en/"
+"About Ouranos" = "https://ouranos.ca/en/"
 
 [tool]
 
@@ -73,36 +74,91 @@ target-version = [
   "py39",
   "py310",
   "py311",
-  "py312"
+  "py312",
+  "py313"
 ]
-extend-exclude = 'lmoments3/_version.py'
 
 [tool.coverage.run]
 source = "lmoments3"
 relative_files = true
-omit = ["*/tests/*.py", "lmoments3/_version.py"]
+omit = ["*/tests/*.py"]
 
 [tool.flit.sdist]
 include = [
   "CHANGELOG.rst",
   "LICENSE",
   "README.rst",
-  "setup.cfg",
-  "versioneer.py",
   "docs/make.bat",
   "docs/Makefile",
   "docs/source/**"
 ]
-exclude = [".*", "conda-recipe/**", "conda-build.ps1", "docs/build/**"]
+exclude = [".*", "conda-recipe/**", "docs/build/**"]
 
-[tool.isort]
-profile = "black"
-py_version = 38
-append_only = true
+[tool.ruff]
+src = ["lmoments3"]
+line-length = 150
+exclude = [
+  ".eggs",
+  ".git",
+  "build",
+  "docs"
+]
 
-[tool.versioneer]
-VCS = "git"
-style = "pep440"
-versionfile_source = "lmoments3/_version.py"
-versionfile_build = "lmoments3/_version.py"
-tag_prefix = "v"
+[tool.ruff.lint]
+extend-select = [
+  "RUF022" # unsorted-dunder-all
+]
+ignore = [
+  "COM", # commas
+  "D205", # blank-line-after-summary
+  "D400", # ends-in-period
+  "D401", # non-imperative-mood
+  "N806", # variable-name
+  # FIXME: the following should be addressed in a future PR
+  "PERF401" # manual-list-comprehension
+]
+preview = true
+select = [
+  "B", # bugbear
+  "BLE", # blind-except
+  "C90", # mccabe-complexity
+  "D", # docstrings
+  "E", # pycodestyle errors
+  "FLY002", # static-join-to-fstring
+  "G", # logging-format
+  "I", # import-order
+  "N", # naming conventions
+  "PERF", # iterator performance
+  "PTH", # pathlib
+  "RUF010", # explicit-f-string-type-conversion
+  "RUF013", # implicit-optional
+  "S", # bandit
+  "UP", # python version conventions
+  "W" # pycodestyle warnings
+]
+
+[tool.ruff.lint.flake8-bandit]
+check-typed-exception = true
+
+[tool.ruff.lint.isort]
+known-first-party = ["lmoments3"]
+case-sensitive = true
+detect-same-package = false
+lines-after-imports = 2
+no-lines-before = ["future", "standard-library"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 20
+
+[tool.ruff.lint.per-file-ignores]
+"docs/**" = ["E402"]
+"src/lmoments3/**/__init__.py" = ["F401", "F403"]
+"src/lmoments3/tests/**" = ["D100", "D101", "D102", "D103", "S101"]
+
+[tool.ruff.lint.pycodestyle]
+max-doc-length = 180
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.setuptools_scm]

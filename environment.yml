@@ -2,7 +2,7 @@ name: lmoments3
 channels:
  - conda-forge
 dependencies:
- - python >=3.9,<3.13
+ - python >=3.9,<3.14
  - numpy
  - scipy
  - black >=24.8.0
@@ -10,6 +10,9 @@ dependencies:
  - python-build >=1.0
  - flake8 >=7.0.0
  - pydocstyle >=6.3.0
+ - ruff >=0.5.7
+ - setuptools
+ - setuptools-scm >=8.0
  - sphinx >=6.0.0
  - sphinx-rtd-theme >=1.0
  - wheel >=0.42.0

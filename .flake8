@@ -1,0 +1,13 @@
+[flake8]
+exclude =
+	.eggs,
+	.git,
+	build,
+	docs,
+	tests
+ignore =
+	C,
+	D,
+	E,
+	F,
+	W503

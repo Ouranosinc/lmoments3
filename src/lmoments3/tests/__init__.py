@@ -1,3 +1,5 @@
+"""Test cases for lmoments3.distr module."""
+
 import unittest
 
 from numpy.testing import assert_almost_equal
@@ -23,7 +25,7 @@ class DistributionTestCase(unittest.TestCase):
             cls.distr_f = getattr(distr, cls.dist)
         super().setUpClass()
 
-    def assertAlmostEqual(self, first, second, places=6):
+    def assertAlmostEqual(self, first, second, places=6):  # noqa: N802
         return assert_almost_equal(first, second, decimal=places)
 
     def test_n_paras(self):

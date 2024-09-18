@@ -1,4 +1,5 @@
-# noqa: D205, D400, D404,
+# noqa: D205,D400,D404
+"""L-moments estimation and calculation functions."""
 """
 This file contains a Python implementation of the lmoments.f library created by
 J. R. M. HOSKING.
@@ -40,7 +41,7 @@ For more information, or to report bugs, contact:
 Licensing for Python Translation:
 ####################################################
     Copyright (C) 2014 Sam Gillespie
-    Copyright (C) 2023 Ouranos Inc., Trevor James Smith, Pascal Bourgault
+    Copyright (C) 2023 Trevor James Smith, Pascal Bourgault, David Huard
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -53,17 +54,21 @@ Licensing for Python Translation:
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ####################################################
-
 """
+import logging  # noqa: E402
+from importlib.metadata import PackageNotFoundError, version  # noqa: E402
 
-import numpy as np
-import scipy.special
+import numpy as np  # noqa: E402
+import scipy.special  # noqa: E402
 
-from . import _version
 
-__version__ = _version.get_versions()["version"]
+try:
+    __version__ = version("lmoments3")
+except PackageNotFoundError:
+    logging.error("lmoments3 is not installed.")
+    pass
 
 
 def lmom_ratios(data, nmom=5):
@@ -87,8 +92,8 @@ def _samlmularge(x, nmom=5):
         x = np.asarray(x, dtype=np.float64)
         n = len(x)
         x = np.sort(x)
-    except ValueError:
-        raise ValueError("Input data to estimate L-moments must be numeric.")
+    except ValueError as err:
+        raise ValueError("Input data to estimate L-moments must be numeric.") from err
 
     if nmom <= 0:
         raise ValueError("Invalid number of sample L-moments")
@@ -114,7 +119,7 @@ def _samlmularge(x, nmom=5):
         xtrans = []
         for i in range(0, n):
             coeftemp = []
-            for j in range(0, mom):
+            for _j in range(0, mom):
                 coeftemp.append(1)
 
             for j in range(0, mom - 1):
@@ -143,8 +148,8 @@ def _samlmusmall(x, nmom=5):
         x = np.asarray(x, dtype=np.float64)
         n = len(x)
         x = np.sort(x)
-    except ValueError:
-        raise ValueError("Input data to estimate L-moments must be numeric.")
+    except ValueError as err:
+        raise ValueError("Input data to estimate L-moments must be numeric.") from err
 
     if nmom <= 0 or nmom > 5:
         raise ValueError("Invalid number of sample L-moments")
